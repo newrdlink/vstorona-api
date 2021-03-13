@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
   service: 'Yandex',
   auth: {
     user: 'club-vs@yandex.ru',
-    pass: 'dcyqcewzfuxeyrcq',
+    pass: '',
   },
 });
 
