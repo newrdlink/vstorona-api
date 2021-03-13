@@ -24,12 +24,11 @@ const userSchema = new mongoose.Schema({
   //   required: true,
   //   select: false,
   // },
-  roles: [
-    {
-      type: String,
-      ref: 'role',
-    },
-  ],
+  role: {
+    type: String,
+    enum: ['admin', 'manager', 'editor'],
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);

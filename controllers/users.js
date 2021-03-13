@@ -3,15 +3,16 @@ const User = require('../models/user');
 
 const getUsers = (req, res, next) => {
   User.find({})
+    .populate('role')
     .then((users) => res.send(users))
     .catch(next);
 };
 
 const createUser = (req, res, next) => {
   // console.log('1');
-  const { name, email, roles } = req.body;
+  const { name, email, role } = req.body;
 
-  User.create({ name, email, roles })
+  User.create({ name, email, role })
     .then((user) => res.send(user))
     .catch(next);
 };
