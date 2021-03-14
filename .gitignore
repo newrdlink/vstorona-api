@@ -6,6 +6,7 @@ npm-debug.log*
 # Dependency directory
 node_modules/
 constants/
+config/
 
 # Optional npm cache directory
 .npm
@@ -16,3 +17,4 @@ constants/
 .vscode
 node_modules
 constants
+config
