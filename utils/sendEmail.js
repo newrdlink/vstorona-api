@@ -11,12 +11,24 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailer = (message) => {
-  transporter.sendMail(message, (err, info) => {
-    if (err) return console.log(err);
-    return console.log('Email sent: ', info);
+// const mailer = (message) => {
+//   transporter.sendMail(message, (err, info) => {
+//     if (err) return console.log(err);
+//     return console.log('Email sent: ', info);
+//   });
+// };
+
+function mailer(message) {
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(message, (err, info) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(info);
+      }
+    });
   });
-};
+}
 
 module.exports = mailer;
 

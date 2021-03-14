@@ -2,6 +2,7 @@ const express = require('express');
 
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 
 const router = require('./router');
 const { BD_ADD } = require('./config');
@@ -22,6 +23,7 @@ mongoose.connect(BD_ADD, {
 
 app.use(router);
 
+app.use(errors());
 app.use(errCtl);
 
 app.listen(PORT, () => {

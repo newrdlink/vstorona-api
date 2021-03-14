@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    lowercase: true,
     unique: true,
     required: true,
     validate: {
@@ -28,6 +29,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'manager', 'editor'],
     required: true,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  hash: {
+    type: String,
   },
 });
 
