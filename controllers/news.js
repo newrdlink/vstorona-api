@@ -10,14 +10,23 @@ const getNews = (req, res, next) => {
 const createNews = (req, res, next) => {
   // console.log('1');
   const {
-    title, subtitle, link, image, createdAt,
+    title,
+    subtitle,
+    link,
+    image,
+    createdAt,
   } = req.body;
 
   News.create({
-    title, subtitle, link, image, creator: req.user.id, createdAt,
+    title,
+    subtitle,
+    link,
+    image,
+    creator: req.user.id,
+    createdAt,
   })
-    .then((news) => console.log(news))
-    .catch((error) => console.log(error));
+    .then((news) => res.send({ id: news.id }))
+    .catch(next);
 };
 
 module.exports = {

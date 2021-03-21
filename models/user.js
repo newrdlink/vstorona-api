@@ -39,17 +39,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['manager', 'editor', 'user'],
     default: 'user',
+    select: false,
   },
   admin: {
     type: Boolean,
     default: false,
+    select: false,
   },
   verified: {
     type: Boolean,
     default: false,
+    select: false,
   },
   hash: {
     type: String,
+    select: false,
   },
 });
 
