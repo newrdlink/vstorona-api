@@ -2,18 +2,21 @@ const { celebrate, Joi } = require('celebrate');
 
 const isValidBodyCreateUser = () => celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
+    firstName: Joi.string().required().min(2).max(30),
+    lastName: Joi.string().required().min(2).max(30),
+    patronymic: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
-    // password: Joi.string().required().min(6).max(26),
+    password: Joi.string().required().min(6).max(26),
+    role: Joi.string().min(6).max(26),
   }),
 });
 
-// const isValidBodyLoginUser = () => celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required().min(6).max(26),
-//   }),
-// });
+const isValidBodyLoginUser = () => celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6).max(26),
+  }),
+});
 
 // const isValidReqIdArticleDelete = () => celebrate({
 //   params: Joi.object().keys({
@@ -37,9 +40,17 @@ const isValidBodyCreateUser = () => celebrate({
 //   }),
 // });
 
+const isAuthUser = () => celebrate({
+  headers: Joi.object().keys({
+    authorization: Joi.string().required().min(40),
+  })
+    .unknown(true),
+});
+
 module.exports = {
   isValidBodyCreateUser,
-  // isValidBodyLoginUser,
+  isValidBodyLoginUser,
+  isAuthUser,
   // isValidBodyCreateArticle,
   // isValidReqIdArticleDelete,
 };

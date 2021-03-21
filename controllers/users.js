@@ -1,13 +1,17 @@
 // const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const mailer = require('../utils/sendEmail');
 const User = require('../models/user');
-const { SALT } = require('../config');
+const { SALT, JWT_WORD } = require('../config');
+const verifyPass = require('../utils/verifyPass');
 // const createToken = require('../utils/createToken');
 const createHash = require('../utils/createHash');
 const cutStr = require('../helpers/cutStr');
+const isAdmin = require('../helpers/isUserAdmin');
 const NotFoundError = require('../errors/not-found-err');
+const NotAuthError = require('../errors/not-auth-err');
 const ConflictError = require('../errors/conflict-err');
-const { notFoundErrors, generalErrors } = require('../constants/errorMessages');
+const { notFoundErrors, notAuthErrors, generalErrors } = require('../constants/errorMessages');
 
 // const Role = require('../models/role');
 
@@ -19,7 +23,9 @@ const getUsers = (req, res, next) => {
 
 const createUser = async (req, res, next) => {
   // console.log('1');
-  const { name, email, role } = req.body;
+  const {
+    firstName, lastName, patronymic, email, role, password,
+  } = req.body;
 
   User.findOne({ email })
     .then((user) => {
@@ -27,15 +33,14 @@ const createUser = async (req, res, next) => {
         throw next(new ConflictError(generalErrors.emailRepeat));
       }
       return createHash(email, SALT);
-      // return encodeURI()
     })
     .then((hash) => {
       // for normal working router for activation from email
       const encodeHash = cutStr(hash);
       const message = {
-        from: 'Message from site <club-vs@yandex.ru>',
+        from: 'Registration <club-vs@yandex.ru>',
         to: `${email}`,
-        subject: 'Test from nodejs',
+        subject: 'Регистрация на vstorona.ru',
         html: `
               <a href="https://localhost:3000/users/activation/${encodeHash}">Активация</a>
               `,
@@ -44,7 +49,14 @@ const createUser = async (req, res, next) => {
       mailer(message)
         .then(() => {
           User.create({
-            name, email, role, hash: encodeHash,
+            firstName,
+            lastName,
+            patronymic,
+            email,
+            role,
+            password,
+            hash: encodeHash,
+            admin: isAdmin(email),
           })
             .then((user) => res.send(user))
             .catch(next);
@@ -56,7 +68,6 @@ const createUser = async (req, res, next) => {
 
 const verifyUser = (req, res, next) => {
   const { hash } = req.params;
-  // console.log(hash);
 
   User.findOne({ hash })
     .then((user) => {
@@ -73,11 +84,32 @@ const verifyUser = (req, res, next) => {
 };
 
 const deleteUser = (req, res, next) => {
-  // console.log(req.params);
   const { userId } = req.params;
 
   User.findById({ userId })
     .then((user) => res.send(user))
+    .catch(next);
+};
+
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) {
+        throw new NotAuthError(notAuthErrors.userNotFound);
+      } else {
+        verifyPass(password, user.password)
+          .then((match) => {
+            if (match) {
+              const token = jwt.sign({ id: user._id }, JWT_WORD, { expiresIn: '7d' });
+              return res.send({ token });
+            }
+            throw new NotAuthError(notAuthErrors.badEmailOrPass);
+          })
+          .catch(next);
+      }
+    })
     .catch(next);
 };
 
@@ -86,4 +118,5 @@ module.exports = {
   createUser,
   verifyUser,
   deleteUser,
+  login,
 };

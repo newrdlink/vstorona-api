@@ -1,4 +1,4 @@
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET, ADMIN_EMAIL } = process.env;
 
 const production = () => NODE_ENV === 'production';
 
@@ -8,8 +8,11 @@ const BD_ADD = 'mongodb://localhost:27017/vstoronabd';
 
 const SALT = 7;
 
+const ADMIN_EMAIL_IS = production() ? ADMIN_EMAIL : 'newrdlink@gmail.com';
+
 module.exports = {
   JWT_WORD,
   BD_ADD,
   SALT,
+  ADMIN_EMAIL_IS,
 };

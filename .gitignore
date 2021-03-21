@@ -5,8 +5,7 @@ npm-debug.log*
 
 # Dependency directory
 node_modules/
-constants/
-config/
+
 
 # Optional npm cache directory
 .npm
@@ -16,5 +15,3 @@ config/
 .idea
 .vscode
 node_modules
-constants
-config
