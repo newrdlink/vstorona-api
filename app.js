@@ -1,14 +1,20 @@
 const express = require('express');
 
 const mongoose = require('mongoose');
+
+const upload = require('express-fileupload');
+
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 
+const cors = require('cors');
 const router = require('./router');
 const { BD_ADD } = require('./config');
 const errCtl = require('./middlewares/handlerErrors');
 
 const app = express();
+app.use(cors());
+app.use(upload());
 const { PORT = 3000 } = process.env;
 
 app.use(bodyParser.urlencoded({ extended: false }));
