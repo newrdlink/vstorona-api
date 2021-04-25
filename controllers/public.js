@@ -11,7 +11,7 @@ const wrWorkerPhoto = async (req, res, next) => {
   // console.log(cutExpStr(sampleFile.name));
   const dirFileName = cutExpStr(sampleFile.name);
 
-  await fs.mkdir(path.join('C:/dev/my/vstorona-api/public/workers', dirFileName), (err) => {
+  await fs.mkdir(path.join('C:/dev/my/vstorona-api/public/', 'workers', dirFileName), (err) => {
     if (err) throw err;
     console.log('Папка создана');
   });
