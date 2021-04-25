@@ -8,6 +8,8 @@ const BD_ADD = 'mongodb://localhost:27017/vstoronabd';
 
 const SALT = 7;
 
+const pathToPublic = '/home/newrdlink/projects/testvs/backend/public';
+
 const ADMIN_EMAIL_IS = production() ? ADMIN_EMAIL : 'newrdlink@gmail.com';
 
 module.exports = {
@@ -15,4 +17,5 @@ module.exports = {
   BD_ADD,
   SALT,
   ADMIN_EMAIL_IS,
+  pathToPublic,
 };

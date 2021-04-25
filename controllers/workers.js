@@ -1,4 +1,5 @@
 const Worker = require('../models/worker');
+// const pathToPublic = require('../config');
 
 const getWorkers = (req, res, next) => {
   Worker.find({})
@@ -15,7 +16,7 @@ const createWorker = (req, res, next) => {
 };
 
 const deleteWorker = (req, res, next) => {
-  console.log(req.params);
+  // console.log(req.params);
   const { workerId } = req.params;
 
   Worker.findById({ workerId })
