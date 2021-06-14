@@ -1,11 +1,22 @@
 const mongoose = require('mongoose');
 
 const workerSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
     required: true,
   },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  patronymic: {
+    type: String,
+  },
   position: {
+    type: String,
+    required: true,
+  },
+  image: {
     type: String,
     required: true,
   },

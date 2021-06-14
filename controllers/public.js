@@ -16,14 +16,14 @@ const wrWorkerPhoto = async (req, res, next) => {
     console.log('Папка создана');
   });
 
-  const uploadPath = path.join(tempPathToPublic, dirFileName, sampleFile.name);
+  const uploadPath = path.normalize(path.join(tempPathToPublic, dirFileName, sampleFile.name));
 
   sampleFile.mv(uploadPath, (err) => {
     if (err) {
       return next();
       // return res.status(500).send(err);
     }
-    return res.send('File uploaded!');
+    return res.send({ uploadPath });
   });
 };
 

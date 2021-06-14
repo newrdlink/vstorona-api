@@ -6,7 +6,7 @@ npm-debug.log*
 # Dependency directory
 node_modules/
 public/
-
+sendEmail.js
 
 # Optional npm cache directory
 .npm
