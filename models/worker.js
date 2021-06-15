@@ -9,7 +9,7 @@ const workerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  patronymic: {
+  middleName: {
     type: String,
   },
   position: {

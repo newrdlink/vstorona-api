@@ -8,9 +8,21 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = (req, res, next) => {
-  const { name, position } = req.body;
+  const {
+    firstName,
+    lastName,
+    middleName,
+    position,
+    image,
+  } = req.body;
 
-  Worker.create({ name, position })
+  Worker.create({
+    firstName,
+    lastName,
+    middleName,
+    position,
+    image,
+  })
     .then((worker) => res.send(worker))
     .catch(next);
 };

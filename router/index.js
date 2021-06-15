@@ -1,9 +1,8 @@
 const router = require('express').Router();
 
-const workersRouter = require('./workers');
-
 const { login, createUser } = require('../controllers/users');
 
+const workersRouter = require('./workers');
 const usersRouter = require('./users');
 const newsRouter = require('./news');
 const publicRouter = require('./public');
