@@ -15,6 +15,7 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = async (req, res, next) => {
+  console.log(__dirname);
   const workerInfo = JSON.parse(req.body.workerInfo);
   const sampleFile = req.files.myfile;
   const dirFileName = cutExpStr(sampleFile.name);
@@ -31,7 +32,11 @@ const createWorker = async (req, res, next) => {
   // make path where file will create
   const dirPath = path.join(tempPathToPublic, dirFileName);
   const uploadPath = path.normalize(path.join(tempPathToPublic, dirFileName, fileName));
-
+  //
+  const pathToFileForBD = path.join(dirPath, fileName);
+  console.log(1, pathToFileForBD);
+  // console.log(fileName);
+  //
   // checking if there is a folder
   if (fs.existsSync(uploadPath)) {
     return next(new AlreadyExists(alreadyExists.dirFounded));
@@ -61,6 +66,7 @@ const createWorker = async (req, res, next) => {
     console.log('Папка создана');
     //
   });
+  return null;
 };
 
 const deleteWorker = (req, res, next) => {
