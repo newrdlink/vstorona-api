@@ -5,7 +5,7 @@ const { login, createUser } = require('../controllers/users');
 const workersRouter = require('./workers');
 const usersRouter = require('./users');
 const newsRouter = require('./news');
-const publicRouter = require('./public');
+// const publicRouter = require('./public');
 
 const modifyReq = require('../middlewares/modifyReq');
 
@@ -33,7 +33,7 @@ router.use(modifyReq);
 //   });
 // });
 
-router.use('/public', publicRouter);
+// router.use('/public', publicRouter);
 
 router.post('/signup', isValidBodyCreateUser(), createUser);
 router.post('/signin',

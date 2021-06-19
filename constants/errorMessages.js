@@ -26,10 +26,16 @@ const generalErrors = {
   failData: 'Дело в том, что это не валидные данные',
 };
 
+const alreadyExists = {
+  dirFounded: 'Такая папка уже существует',
+  errWriteFile: 'Ошибка записи файла',
+};
+
 module.exports = {
   notFoundErrors,
   notAccessErrors,
   notAuthErrors,
   errorsInModels,
   generalErrors,
+  alreadyExists,
 };
