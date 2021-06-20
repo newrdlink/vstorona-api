@@ -18,7 +18,7 @@ const app = express();
 app.use(cors());
 app.use(upload());
 
-const { PORT = 3000 } = process.env;
+const { PORT = 5000 } = process.env;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

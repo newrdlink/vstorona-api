@@ -5,7 +5,7 @@ const Worker = require('../models/worker');
 const AlreadyExists = require('../errors/already-exists');
 const { alreadyExists } = require('../constants/errorMessages');
 
-const tempPathToPublic = 'C:/dev/my/vstorona-api/public/workers';
+const tempPathToPublic = './public/workers';
 const cutExpStr = require('../helpers/cutExpansionFile');
 
 const getWorkers = (req, res, next) => {
@@ -30,15 +30,16 @@ const createWorker = async (req, res, next) => {
     // image,
   } = workerInfo;
   // make path where file will create
-  const dirPath = path.join(tempPathToPublic, dirFileName);
-  const uploadPath = path.normalize(path.join(tempPathToPublic, dirFileName, fileName));
+  const dirPath = path.join(__dirname,'..','public','workers', dirFileName);
+  const uploadPath = path.normalize(path.join(dirPath, fileName));
   //
   const pathToFileForBD = path.join(dirPath, fileName);
   console.log(1, pathToFileForBD);
+  console.log(dirPath);
   // console.log(fileName);
   //
   // checking if there is a folder
-  if (fs.existsSync(uploadPath)) {
+  if (fs.existsSync(dirPath)) {
     return next(new AlreadyExists(alreadyExists.dirFounded));
   }
 
@@ -55,7 +56,7 @@ const createWorker = async (req, res, next) => {
           lastName,
           middleName,
           position,
-          image: sampleFile.name,
+          image: `http://api.vstorona.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
         })
           .then((worker) => res.send({ message: worker.image }))
           .catch(next);
