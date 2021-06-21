@@ -1,6 +1,6 @@
 const notFoundErrors = {
   badToken: 'Проблемы с токеном',
-  articleNotFound: 'Уже нет такой статьи',
+  workerNotFound: 'Уже нет такого работника',
   userNotFound: 'Нет такого пользователя',
   badPath: ' - нет такого пути',
 };

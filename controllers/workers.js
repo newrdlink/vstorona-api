@@ -1,10 +1,12 @@
 const path = require('path');
 const fs = require('fs');
-const Worker = require('../models/worker');
-// const pathToPublic = require('../config');
 const AlreadyExists = require('../errors/already-exists');
 const { alreadyExists } = require('../constants/errorMessages');
 const cutExpStr = require('../helpers/cutExpansionFile');
+const NotFoundError = require('../errors/not-found-err');
+const DataFailError = require('../errors/data-fail-err');
+const { notFoundErrors, generalErrors } = require('../constants/errorMessages');
+const Worker = require('../models/worker');
 
 const getWorkers = (req, res, next) => {
   Worker.find({})
@@ -58,17 +60,24 @@ const createWorker = async (req, res, next) => {
   return null;
 };
 
-const deleteWorker = (req, res, next) => {
-  // console.log(req.params);
-  const { workerId } = req.params;
+const rmWorker = (req, res, next) => {
+  const { id: _id } = req.params;
 
-  Worker.findById({ workerId })
+  Worker.findById({ _id })
+    .orFail(() => {
+      throw new NotFoundError(notFoundErrors.workerNotFound);
+    })
     .then((worker) => res.send(worker))
-    .catch(next);
+    .catch((error) => {
+      if (error.kind === 'ObjectId') {
+        return next(new DataFailError(generalErrors.failData));
+      }
+      return next(error);
+    });
 };
 
 module.exports = {
   getWorkers,
   createWorker,
-  deleteWorker,
+  rmWorker,
 };
