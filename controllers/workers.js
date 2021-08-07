@@ -15,11 +15,12 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = async (req, res, next) => {
+  // console.log(1);
   const workerInfo = JSON.parse(req.body.workerInfo);
-  const sampleFile = req.files.myfile;
+  const sampleFile = req.files.imageFile;
   const dirFileName = cutExpStr(sampleFile.name);
 
-  const { files: { myfile: { name: fileName } } } = req;
+  const { files: { imageFile: { name: fileName } } } = req;
 
   const {
     firstName,
