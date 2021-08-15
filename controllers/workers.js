@@ -54,7 +54,7 @@ const createWorker = async (req, res, next) => {
           // image: `${dirPath}/${sampleFile.name}`,
         })
           .then((worker) => res.send({
-            id: worker._id,
+            _id: worker._id,
             firstName,
             lastName,
             middleName,
