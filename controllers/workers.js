@@ -3,6 +3,7 @@ const fs = require('fs');
 const AlreadyExists = require('../errors/already-exists');
 const { alreadyExists } = require('../constants/errorMessages');
 const cutExpStr = require('../helpers/cutExpansionFile');
+const preparePathForRmDir = require('../helpers/createPathForRmFolder');
 const NotFoundError = require('../errors/not-found-err');
 const DataFailError = require('../errors/data-fail-err');
 const { notFoundErrors, generalErrors } = require('../constants/errorMessages');
@@ -15,7 +16,7 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = async (req, res, next) => {
-  // console.log(1);
+  console.log(1);
   const workerInfo = JSON.parse(req.body.workerInfo);
   const sampleFile = req.files.imageFile;
   const dirFileName = cutExpStr(sampleFile.name);
@@ -50,8 +51,8 @@ const createWorker = async (req, res, next) => {
           lastName,
           middleName,
           position,
-          image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
-          // image: `${dirPath}/${sampleFile.name}`,
+          // image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+          image: `${dirPath}/${sampleFile.name}`,
         })
           .then((worker) => res.send({
             _id: worker._id,
@@ -68,14 +69,32 @@ const createWorker = async (req, res, next) => {
   return null;
 };
 
-const rmWorker = (req, res, next) => {
+const rmWorker = async (req, res, next) => {
   const { id: _id } = req.params;
 
   Worker.findById({ _id })
     .orFail(() => {
       throw new NotFoundError(notFoundErrors.workerNotFound);
     })
-    .then((worker) => res.send(worker))
+    .then((worker) => {
+      if (fs.existsSync(worker.image)) {
+        // // for remove dir from localhost DB and location file
+        // const pathFileName = path.normalize(cutExpStr(worker.image));
+        // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
+        // console.log(preparePathForRmDir(pathFileName));
+        // console.log('папка удалена');
+
+
+        const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
+        console.log(dirPath);
+      }
+      // search worker for remove
+      // Worker.findByIdAndRemove({ _id })
+      //   .then(() => console.log('воркер удален из базы'))
+      //   .catch(next);
+
+      // res.send(worker);
+    })
     .catch((error) => {
       if (error.kind === 'ObjectId') {
         return next(new DataFailError(generalErrors.failData));
