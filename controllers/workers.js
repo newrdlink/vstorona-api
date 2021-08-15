@@ -15,7 +15,7 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = async (req, res, next) => {
-  console.log(1);
+  // console.log(1);
   const workerInfo = JSON.parse(req.body.workerInfo);
   const sampleFile = req.files.imageFile;
   const dirFileName = cutExpStr(sampleFile.name);
@@ -50,8 +50,8 @@ const createWorker = async (req, res, next) => {
           lastName,
           middleName,
           position,
-          // image: `http://api.vstorona.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
-          image: `${dirPath}/${sampleFile.name}`,
+          image: `http://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+          // image: `${dirPath}/${sampleFile.name}`,
         })
           .then((worker) => res.send({ workerId: worker._id }))
           .catch(next);
