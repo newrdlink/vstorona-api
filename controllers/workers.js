@@ -15,7 +15,7 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = async (req, res, next) => {
-  // console.log(1);
+  console.log(1);
   const workerInfo = JSON.parse(req.body.workerInfo);
   const sampleFile = req.files.imageFile;
   const dirFileName = cutExpStr(sampleFile.name);
