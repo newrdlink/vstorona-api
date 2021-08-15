@@ -59,6 +59,7 @@ const createWorker = async (req, res, next) => {
             lastName,
             middleName,
             position,
+            image: worker.image,
           }))
           .catch(next);
       });
