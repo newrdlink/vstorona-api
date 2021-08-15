@@ -50,10 +50,16 @@ const createWorker = async (req, res, next) => {
           lastName,
           middleName,
           position,
-          image: `http://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+          image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
           // image: `${dirPath}/${sampleFile.name}`,
         })
-          .then((worker) => res.send({ workerId: worker._id }))
+          .then((worker) => res.send({
+            id: worker._id,
+            firstName,
+            lastName,
+            middleName,
+            position,
+          }))
           .catch(next);
       });
     }
