@@ -157,15 +157,17 @@ const rmWorker = async (req, res, next) => {
       throw new NotFoundError(notFoundErrors.workerNotFound);
     })
     .then((worker) => {
+      const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
+      console.log(1, dirPath);
       // console.log(worker);
       if (fs.existsSync(worker.image)) {
         // // for remove dir from localhost DB and location file
         // const pathFileName = path.normalize(cutExpStr(worker.image));
         // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
         // for remove dir from serverDB location file
-        const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
+        // const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
         fs.rmdirSync(preparePathForRmDir(dirPath), { recursive: true });
-        console.log(dirPath);
+        // console.log(2, dirPath);
       }
       // search worker for remove of DB
       // Worker.findByIdAndRemove({ _id })
