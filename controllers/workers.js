@@ -28,7 +28,6 @@ const createWorker = async (req, res, next) => {
     lastName,
     middleName,
     position,
-    // image,
   } = workerInfo;
   // make path where file will create
   const dirPath = path.join(__dirname, '..', 'public', 'workers', dirFileName);
