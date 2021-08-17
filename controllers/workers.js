@@ -159,14 +159,15 @@ const rmWorker = async (req, res, next) => {
       const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
       console.log(1, dirPath);
       // console.log(worker);
-      if (fs.existsSync(worker.image)) {
+      if (fs.existsSync(dirPath)) {
+        console.log('folder founded');
         // // for remove dir from localhost DB and location file
         // const pathFileName = path.normalize(cutExpStr(worker.image));
         // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
         // for remove dir from serverDB location file
         // const dirPath = path.join('/home/newrdlink/projects/
         // vs/backend/public/', preparePathForRmDir(worker.image));
-        fs.rmdirSync(preparePathForRmDir(dirPath), { recursive: true });
+        fs.rmdirSync(dirPath, { recursive: true });
         // console.log(2, dirPath);
       }
       // search worker for remove of DB
