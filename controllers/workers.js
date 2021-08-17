@@ -16,7 +16,7 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = async (req, res, next) => {
-  console.log(1);
+  // console.log('add worker');
   const workerInfo = JSON.parse(req.body.workerInfo);
   const sampleFile = req.files.imageFile;
   const dirFileName = cutExpStr(sampleFile.name);
@@ -51,8 +51,8 @@ const createWorker = async (req, res, next) => {
           lastName,
           middleName,
           position,
-          // image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
-          image: `${dirPath}/${sampleFile.name}`,
+          image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+          // image: `${dirPath}\\${sampleFile.name}`,
         })
           .then((worker) => res.send({
             _id: worker._id,
@@ -69,6 +69,85 @@ const createWorker = async (req, res, next) => {
   return null;
 };
 
+const patchWorker = async (req, res, next) => {
+  // console.log('patch worker');
+  const workerInfo = JSON.parse(req.body.workerInfo);
+
+  const {
+    firstName,
+    lastName,
+    middleName,
+    position,
+    _id,
+    // image,
+  } = workerInfo;
+
+  if (!req.files) {
+    // console.log('update only text info worker');
+    Worker.findByIdAndUpdate(_id, {
+      firstName,
+      lastName,
+      middleName,
+      position,
+    }, {
+      new: true,
+      runValidators: true,
+    })
+      .then((workerUpdate) => {
+        res.send(workerUpdate);
+      })
+      .catch(next);
+  } else {
+    const sampleFile = req.files.imageFile;
+    const dirFileName = cutExpStr(sampleFile.name);
+    const dirPath = path.join(__dirname, '..', 'public', 'workers', dirFileName);
+
+    Worker.findById({ _id })
+      .then((worker) => {
+        const removeDirPath = preparePathForRmDir(path.normalize(cutExpStr(worker.image)));
+
+        if (fs.existsSync(removeDirPath)) {
+          // remove dir
+          fs.rmdirSync((removeDirPath), { recursive: true });
+          // console.log('папка удалена');
+          const { files: { imageFile: { name: fileName } } } = req;
+          const uploadPath = path.normalize(path.join(dirPath, fileName));
+
+          fs.mkdir(dirPath, (err) => {
+            if (err) {
+              next(new AlreadyExists(alreadyExists.errWriteFile));
+            } else {
+              // write file to path
+              sampleFile.mv(uploadPath, (error) => {
+                // if server error when write file
+                if (error) { throw next(error); }
+
+                Worker.findByIdAndUpdate(_id, {
+                  firstName,
+                  lastName,
+                  middleName,
+                  position,
+                  image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+                  // image: `${dirPath}\\${sampleFile.name}`,
+                }, {
+                  new: true,
+                  runValidators: true,
+                })
+                  .then((workerUpdate) => {
+                    res.send(workerUpdate);
+                  })
+                  .catch(next);
+              });
+            }
+          });
+        }
+        // return next(new AlreadyExists(alreadyExists.fileExists));
+      })
+      .catch(next);
+    // console.log('update file img with/without text info');
+  }
+};
+
 const rmWorker = async (req, res, next) => {
   const { id: _id } = req.params;
 
@@ -77,23 +156,21 @@ const rmWorker = async (req, res, next) => {
       throw new NotFoundError(notFoundErrors.workerNotFound);
     })
     .then((worker) => {
+      // console.log(worker);
       if (fs.existsSync(worker.image)) {
         // // for remove dir from localhost DB and location file
         // const pathFileName = path.normalize(cutExpStr(worker.image));
         // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
-        // console.log(preparePathForRmDir(pathFileName));
-        // console.log('папка удалена');
-
-
+        // for remove dir from serverDB location file
         const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
-        console.log(dirPath);
+        fs.rmdirSync(preparePathForRmDir(dirPath), { recursive: true });
+        // console.log(dirPath);
       }
       // search worker for remove
-      // Worker.findByIdAndRemove({ _id })
-      //   .then(() => console.log('воркер удален из базы'))
-      //   .catch(next);
-
-      // res.send(worker);
+      Worker.findByIdAndRemove({ _id })
+        .then(() => console.log('воркер удален из базы'))
+        .catch(next);
+      res.send(worker);
     })
     .catch((error) => {
       if (error.kind === 'ObjectId') {
@@ -106,5 +183,6 @@ const rmWorker = async (req, res, next) => {
 module.exports = {
   getWorkers,
   createWorker,
+  patchWorker,
   rmWorker,
 };

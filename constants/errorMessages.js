@@ -28,6 +28,7 @@ const generalErrors = {
 
 const alreadyExists = {
   dirFounded: 'Такая папка уже существует',
+  fileExists: 'Файл с таким именем существует',
   errWriteFile: 'Ошибка записи файла',
 };
 
