@@ -171,10 +171,10 @@ const rmWorker = async (req, res, next) => {
         // console.log(2, dirPath);
       }
       // search worker for remove of DB
-      // Worker.findByIdAndRemove({ _id })
-      //   .then(() => console.log('воркер удален из базы'))
-      //   .catch(next);
-      // res.send(worker);
+      Worker.findByIdAndRemove({ _id })
+        .then(() => console.log('воркер удален из базы'))
+        .catch(next);
+      res.send(worker);
     })
     .catch((error) => {
       if (error.kind === 'ObjectId') {
