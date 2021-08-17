@@ -164,13 +164,13 @@ const rmWorker = async (req, res, next) => {
         // for remove dir from serverDB location file
         const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
         fs.rmdirSync(preparePathForRmDir(dirPath), { recursive: true });
-        // console.log(dirPath);
+        console.log(dirPath);
       }
-      // search worker for remove
-      Worker.findByIdAndRemove({ _id })
-        .then(() => console.log('воркер удален из базы'))
-        .catch(next);
-      res.send(worker);
+      // search worker for remove of DB
+      // Worker.findByIdAndRemove({ _id })
+      //   .then(() => console.log('воркер удален из базы'))
+      //   .catch(next);
+      // res.send(worker);
     })
     .catch((error) => {
       if (error.kind === 'ObjectId') {
