@@ -150,6 +150,7 @@ const patchWorker = async (req, res, next) => {
 
 const rmWorker = async (req, res, next) => {
   const { id: _id } = req.params;
+  console.log(_id);
 
   Worker.findById({ _id })
     .orFail(() => {
