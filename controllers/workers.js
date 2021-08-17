@@ -157,7 +157,7 @@ const rmWorker = async (req, res, next) => {
       throw new NotFoundError(notFoundErrors.workerNotFound);
     })
     .then((worker) => {
-      const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(path.normalize(cutExpStr(worker.image))));
+      const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/workers', cutExpStr(worker.image));
       console.log(1, dirPath);
       // console.log(worker);
       if (fs.existsSync(worker.image)) {
