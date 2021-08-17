@@ -2,4 +2,4 @@
 // module.exports = (str) => str.slice(0, str.lastIndexOf('\\'));
 
 // for rmDir from server
-module.exports = (str) => str.slice(24);
+module.exports = (str) => str.slice(24, str.lastIndexOf('\\'));
