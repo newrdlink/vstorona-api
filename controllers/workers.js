@@ -113,7 +113,7 @@ const patchWorker = async (req, res, next) => {
         return removeDirPath;
       })
       .then((pathFolder) => {
-        console.log(pathFolder);
+        console.log(111, pathFolder);
       });
   }
 };
