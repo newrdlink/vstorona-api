@@ -103,6 +103,10 @@ const patchWorker = async (req, res, next) => {
     console.log('change photo');
     Worker.findById({ _id })
       .then((worker) => {
+        const tempPath = path.normalize(cutExpStr(worker.image));
+        console.log(tempPath);
+        const tempPath2 = preparePathForRmDir(tempPath);
+        console.log(tempPath2);
         const removeDirPath = preparePathForRmDir(path.normalize(cutExpStr(worker.image)));
         console.log(worker.image);
         console.log(removeDirPath);
