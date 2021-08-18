@@ -112,8 +112,8 @@ const patchWorker = async (req, res, next) => {
         const removeDirPath = preparePathForRmDir(cutExpStr(worker.image));
         return removeDirPath;
       })
-      .then((pathFolder) => {
-        console.log(111, pathFolder);
+      .then((removeDirPath) => {
+        console.log(111, removeDirPath);
       });
   }
 };
