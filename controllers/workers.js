@@ -113,8 +113,8 @@ const patchWorker = async (req, res, next) => {
         console.log(333, preparePathForRmDir(worker.image));
         return removeDirPath;
       })
-      .then((removeDirPath) => {
-        console.log(111, removeDirPath);
+      .then((dirRmPath) => {
+        console.log(111, dirRmPath);
       });
   }
 };
