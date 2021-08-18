@@ -109,7 +109,7 @@ const patchWorker = async (req, res, next) => {
         // console.log(tempPath);
         // const tempPath2 = preparePathForRmDir(tempPath);
         // console.log(tempPath2);
-        const removeDirPath = preparePathForRmDir(path.normalize(cutExpStr(worker.image)));
+        const removeDirPath = preparePathForRmDir(cutExpStr(worker.image));
         return removeDirPath;
       })
       .then((pathFolder) => {
