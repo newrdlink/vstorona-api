@@ -105,8 +105,10 @@ const patchWorker = async (req, res, next) => {
       .then((worker) => {
         const removeDirPath = preparePathForRmDir(path.normalize(cutExpStr(worker.image)));
         console.log(worker);
+        console.log(removeDirPath);
         if (fs.existsSync(removeDirPath)) {
           // remove dir
+          console.log('folder founded');
           fs.rmdirSync((removeDirPath), { recursive: true });
           // console.log('папка удалена');
           const { files: { imageFile: { name: fileName } } } = req;
