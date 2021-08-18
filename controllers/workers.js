@@ -101,57 +101,65 @@ const patchWorker = async (req, res, next) => {
     const dirFileName = cutExpStr(sampleFile.name);
     const dirPath = path.join(__dirname, '..', 'public', 'workers', dirFileName);
     console.log('change photo');
+    console.log(1, dirPath);
     Worker.findById({ _id })
       .then((worker) => {
-        const tempPath = path.normalize(cutExpStr(worker.image));
-        console.log(tempPath);
-        const tempPath2 = preparePathForRmDir(tempPath);
-        console.log(tempPath2);
+        // const tempPath = path.normalize(cutExpStr(worker.image));
+        // console.log(tempPath);
+        // const tempPath2 = preparePathForRmDir(tempPath);
+        // console.log(tempPath2);
         const removeDirPath = preparePathForRmDir(path.normalize(cutExpStr(worker.image)));
-        console.log(worker.image);
-        console.log(removeDirPath);
-        if (fs.existsSync(removeDirPath)) {
-          // remove dir
-          console.log('folder founded');
-          fs.rmdirSync((removeDirPath), { recursive: true });
-          // console.log('папка удалена');
-          const { files: { imageFile: { name: fileName } } } = req;
-          const uploadPath = path.normalize(path.join(dirPath, fileName));
-
-          fs.mkdir(dirPath, (err) => {
-            if (err) {
-              next(new AlreadyExists(alreadyExists.errWriteFile));
-            } else {
-              // write file to path
-              sampleFile.mv(uploadPath, (error) => {
-                // if server error when write file
-                if (error) { throw next(error); }
-
-                Worker.findByIdAndUpdate(_id, {
-                  firstName,
-                  lastName,
-                  middleName,
-                  position,
-                  image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
-                  // image: `${dirPath}\\${sampleFile.name}`,
-                }, {
-                  new: true,
-                  runValidators: true,
-                })
-                  .then((workerUpdate) => {
-                    res.send(workerUpdate);
-                  })
-                  .catch(next);
-              });
-            }
-          });
-        }
-        // return next(new AlreadyExists(alreadyExists.fileExists));
+        return removeDirPath;
       })
-      .catch(next);
-    // console.log('update file img with/without text info');
+      .then((pathFolder) => {
+        console.log(pathFolder);
+      });
   }
 };
+// console.log(worker.image);
+// console.log(removeDirPath);
+//     if (fs.existsSync(removeDirPath)) {
+//       // remove dir
+//       console.log('folder founded');
+//       fs.rmdirSync((removeDirPath), { recursive: true });
+//       // console.log('папка удалена');
+//       const { files: { imageFile: { name: fileName } } } = req;
+//       const uploadPath = path.normalize(path.join(dirPath, fileName));
+
+//       fs.mkdir(dirPath, (err) => {
+//         if (err) {
+//           next(new AlreadyExists(alreadyExists.errWriteFile));
+//         } else {
+//           // write file to path
+//           sampleFile.mv(uploadPath, (error) => {
+//             // if server error when write file
+//             if (error) { throw next(error); }
+
+//             Worker.findByIdAndUpdate(_id, {
+//               firstName,
+//               lastName,
+//               middleName,
+//               position,
+//               image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+//               // image: `${dirPath}\\${sampleFile.name}`,
+//             }, {
+//               new: true,
+//               runValidators: true,
+//             })
+//               .then((workerUpdate) => {
+//                 res.send(workerUpdate);
+//               })
+//               .catch(next);
+//           });
+//         }
+//       });
+//     }
+//     // return next(new AlreadyExists(alreadyExists.fileExists));
+//   })
+//       .catch (next);
+//     // console.log('update file img with/without text info');
+//   }
+// };
 
 const rmWorker = async (req, res, next) => {
   const { id: _id } = req.params;

@@ -3,3 +3,4 @@
 
 // for rmDir from server
 module.exports = (str) => str.slice(24, str.lastIndexOf('/'));
+// module.exports = (str) => str.slice(24, str.lastIndexOf('/'));
