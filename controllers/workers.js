@@ -106,46 +106,45 @@ const patchWorker = async (req, res, next) => {
       .then((worker) => {
         console.log(11, worker);
 
-        const removeDirPath = preparePathForRmDir(worker.image);
-        console.log(333, path.join(__dirname, '..', 'public', preparePathForRmDir(worker.image)));
-        console.log(worker.image);
+        const removeDirPath = path.join(__dirname, '..', 'public', preparePathForRmDir(worker.image));
+
         console.log(removeDirPath);
-        // if (fs.existsSync(removeDirPath)) {
-        //   // remove dir
-        //   console.log('folder founded');
-        //   fs.rmdirSync((removeDirPath), { recursive: true });
-        //   // console.log('папка удалена');
-        //   const { files: { imageFile: { name: fileName } } } = req;
-        //   const uploadPath = path.normalize(path.join(dirPath, fileName));
+        if (fs.existsSync(removeDirPath)) {
+          // remove dir
+          console.log('folder founded');
+          fs.rmdirSync((removeDirPath), { recursive: true });
+          // console.log('папка удалена');
+          const { files: { imageFile: { name: fileName } } } = req;
+          const uploadPath = path.normalize(path.join(dirPath, fileName));
 
-        //   fs.mkdir(dirPath, (err) => {
-        //     if (err) {
-        //       next(new AlreadyExists(alreadyExists.errWriteFile));
-        //     } else {
-        //       // write file to path
-        //       sampleFile.mv(uploadPath, (error) => {
-        //         // if server error when write file
-        //         if (error) { throw next(error); }
+          fs.mkdir(dirPath, (err) => {
+            if (err) {
+              next(new AlreadyExists(alreadyExists.errWriteFile));
+            } else {
+              // write file to path
+              sampleFile.mv(uploadPath, (error) => {
+                // if server error when write file
+                if (error) { throw next(error); }
 
-        //         Worker.findByIdAndUpdate(_id, {
-        //           firstName,
-        //           lastName,
-        //           middleName,
-        //           position,
-        //           image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
-        //           // image: `${dirPath}\\${sampleFile.name}`,
-        //         }, {
-        //           new: true,
-        //           runValidators: true,
-        //         })
-        //           .then((workerUpdate) => {
-        //             res.send(workerUpdate);
-        //           })
-        //           .catch(next);
-        //       });
-        //     }
-        //   });
-        // }
+                Worker.findByIdAndUpdate(_id, {
+                  firstName,
+                  lastName,
+                  middleName,
+                  position,
+                  image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+                  // image: `${dirPath}\\${sampleFile.name}`,
+                }, {
+                  new: true,
+                  runValidators: true,
+                })
+                  .then((workerUpdate) => {
+                    res.send(workerUpdate);
+                  })
+                  .catch(next);
+              });
+            }
+          });
+        }
         // return next(new AlreadyExists(alreadyExists.fileExists));
       })
       .catch(next);
