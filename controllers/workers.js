@@ -104,6 +104,7 @@ const patchWorker = async (req, res, next) => {
     console.log(1, dirPath);
     Worker.findById({ _id })
       .then((worker) => {
+        console.log(11, worker);
         // const tempPath = path.normalize(cutExpStr(worker.image));
         // console.log(tempPath);
         // const tempPath2 = preparePathForRmDir(tempPath);
