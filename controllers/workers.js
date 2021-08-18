@@ -104,14 +104,14 @@ const patchWorker = async (req, res, next) => {
     // console.log(1, dirPath);
     Worker.findById({ _id })
       .then((worker) => {
-        console.log(11, worker);
+        // console.log(11, worker);
 
         const removeDirPath = path.join(__dirname, '..', 'public', preparePathForRmDir(worker.image));
 
-        console.log(removeDirPath);
+        // console.log(removeDirPath);
         if (fs.existsSync(removeDirPath)) {
           // remove dir
-          console.log('folder founded');
+          // console.log('folder founded');
           fs.rmdirSync((removeDirPath), { recursive: true });
           // console.log('папка удалена');
           const { files: { imageFile: { name: fileName } } } = req;
@@ -145,7 +145,7 @@ const patchWorker = async (req, res, next) => {
             }
           });
         }
-        // return next(new AlreadyExists(alreadyExists.fileExists));
+        return next(new NotFoundError(notFoundErrors.folderNoFounded));
       })
       .catch(next);
     // console.log('update file img with/without text info');

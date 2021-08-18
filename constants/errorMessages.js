@@ -3,6 +3,7 @@ const notFoundErrors = {
   workerNotFound: 'Уже нет такого работника',
   userNotFound: 'Нет такого пользователя',
   badPath: ' - нет такого пути',
+  folderNoFounded: 'А папки на сервере такой нет',
 };
 
 const notAccessErrors = {
