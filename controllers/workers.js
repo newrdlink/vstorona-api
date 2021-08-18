@@ -69,7 +69,7 @@ const createWorker = async (req, res, next) => {
 };
 
 const patchWorker = async (req, res, next) => {
-  // console.log('patch worker');
+  console.log('patch worker');
   const workerInfo = JSON.parse(req.body.workerInfo);
 
   const {
@@ -82,7 +82,7 @@ const patchWorker = async (req, res, next) => {
   } = workerInfo;
 
   if (!req.files) {
-    // console.log('update only text info worker');
+    console.log('update only text info worker');
     Worker.findByIdAndUpdate(_id, {
       firstName,
       lastName,
@@ -100,7 +100,7 @@ const patchWorker = async (req, res, next) => {
     const sampleFile = req.files.imageFile;
     const dirFileName = cutExpStr(sampleFile.name);
     const dirPath = path.join(__dirname, '..', 'public', 'workers', dirFileName);
-
+    console.log('change photo');
     Worker.findById({ _id })
       .then((worker) => {
         const removeDirPath = preparePathForRmDir(path.normalize(cutExpStr(worker.image)));
