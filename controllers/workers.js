@@ -104,7 +104,7 @@ const patchWorker = async (req, res, next) => {
     Worker.findById({ _id })
       .then((worker) => {
         const removeDirPath = preparePathForRmDir(path.normalize(cutExpStr(worker.image)));
-        console.log(worker);
+        console.log(worker.image);
         console.log(removeDirPath);
         if (fs.existsSync(removeDirPath)) {
           // remove dir
