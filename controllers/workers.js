@@ -108,8 +108,9 @@ const patchWorker = async (req, res, next) => {
 
         const removeDirPath = path.join(__dirname, '..', 'public', preparePathForRmDir(worker.image));
 
-        console.log(removeDirPath);
-        console.log(123, fs.existsSync(removeDirPath));
+        // if (!fs.existsSync(removeDirPath)) {
+        //   return next(new NotFoundError(notFoundErrors.folderNoFounded));
+        // }
         if (fs.existsSync(removeDirPath)) {
           // remove dir
           // console.log('folder founded');
