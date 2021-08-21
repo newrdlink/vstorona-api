@@ -146,7 +146,7 @@ const patchWorker = async (req, res, next) => {
             }
           });
         }
-        return next(new NotFoundError(notFoundErrors.folderNoFounded));
+        // return next(new NotFoundError(notFoundErrors.folderNoFounded));
       })
       .catch(next);
     // console.log('update file img with/without text info');
