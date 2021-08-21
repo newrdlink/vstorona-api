@@ -101,7 +101,7 @@ const patchWorker = async (req, res, next) => {
     const dirFileName = cutExpStr(sampleFile.name);
     const dirPath = path.join(__dirname, '..', 'public', 'workers', dirFileName);
     // console.log('change photo');
-    // console.log(1, dirPath);
+    // console.log(1, dirFileName);
     Worker.findById({ _id })
       .then((worker) => {
         // console.log(11, worker);
@@ -109,6 +109,7 @@ const patchWorker = async (req, res, next) => {
         const removeDirPath = path.join(__dirname, '..', 'public', preparePathForRmDir(worker.image));
 
         console.log(removeDirPath);
+        console.log(123, fs.existsSync(removeDirPath));
         if (fs.existsSync(removeDirPath)) {
           // remove dir
           // console.log('folder founded');
