@@ -3,8 +3,8 @@ const { getUsers, createUser, verifyUser } = require('../controllers/users');
 const { isValidBodyCreateUser } = require('../utils/validateRequest');
 
 // const auth = require('../middlewares/auth');
-
-router.patch('/activation/:hash', verifyUser);
+// verification user email
+router.get('/activation/:hash', verifyUser);
 
 router.get('/', getUsers);
 

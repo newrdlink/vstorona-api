@@ -6,7 +6,8 @@ const cutExpStr = require('../helpers/cutExpansionFile');
 const preparePathForRmDir = require('../helpers/createPathForRmFolder');
 const NotFoundError = require('../errors/not-found-err');
 const DataFailError = require('../errors/data-fail-err');
-const { notFoundErrors, generalErrors } = require('../constants/errorMessages');
+const NotAuthError = require('../errors/not-auth-err');
+const { notFoundErrors, generalErrors, notAuthErrors } = require('../constants/errorMessages');
 const Worker = require('../models/worker');
 
 const getWorkers = (req, res, next) => {
@@ -16,7 +17,10 @@ const getWorkers = (req, res, next) => {
 };
 
 const createWorker = async (req, res, next) => {
-  // console.log('add worker');
+  // console.log(req.user);
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
   const workerInfo = JSON.parse(req.body.workerInfo);
   const sampleFile = req.files.imageFile;
   const dirFileName = cutExpStr(sampleFile.name);
@@ -36,7 +40,7 @@ const createWorker = async (req, res, next) => {
   if (fs.existsSync(dirPath)) {
     return next(new AlreadyExists(alreadyExists.dirFounded));
   }
-
+  // console.log('we are there');
   await fs.mkdir(dirPath, (err) => {
     if (err) {
       next(new AlreadyExists(alreadyExists.errWriteFile));
@@ -52,6 +56,7 @@ const createWorker = async (req, res, next) => {
           position,
           image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
           // image: `${dirPath}\\${sampleFile.name}`,
+          owner: req.user.id,
         })
           .then((worker) => res.send({
             _id: worker._id,
@@ -69,7 +74,10 @@ const createWorker = async (req, res, next) => {
 };
 
 const patchWorker = async (req, res, next) => {
-  console.log('patch worker');
+  // console.log('patch worker');
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
   const workerInfo = JSON.parse(req.body.workerInfo);
 
   const {
@@ -82,7 +90,7 @@ const patchWorker = async (req, res, next) => {
   } = workerInfo;
 
   if (!req.files) {
-    console.log('update only text info worker');
+    // console.log('update only text info worker');
     Worker.findByIdAndUpdate(_id, {
       firstName,
       lastName,
@@ -105,9 +113,7 @@ const patchWorker = async (req, res, next) => {
     Worker.findById({ _id })
       .then((worker) => {
         // console.log(11, worker);
-
         const removeDirPath = path.join(__dirname, '..', 'public', preparePathForRmDir(worker.image));
-
         // if (!fs.existsSync(removeDirPath)) {
         //   return next(new NotFoundError(notFoundErrors.folderNoFounded));
         // }
@@ -151,23 +157,25 @@ const patchWorker = async (req, res, next) => {
       })
       .catch(next);
     // console.log('update file img with/without text info');
-  }
+  } return null;
 };
 
 const rmWorker = async (req, res, next) => {
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
   const { id: _id } = req.params;
-  console.log(_id);
-
+  // console.log(_id);
   Worker.findById({ _id })
     .orFail(() => {
       throw new NotFoundError(notFoundErrors.workerNotFound);
     })
     .then((worker) => {
       const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/', preparePathForRmDir(worker.image));
-      console.log(1, dirPath);
+      // console.log(1, dirPath);
       // console.log(worker);
       if (fs.existsSync(dirPath)) {
-        console.log('folder founded');
+        // console.log('folder founded');
         // // for remove dir from localhost DB and location file
         // const pathFileName = path.normalize(cutExpStr(worker.image));
         // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
@@ -189,6 +197,7 @@ const rmWorker = async (req, res, next) => {
       }
       return next(error);
     });
+  return null;
 };
 
 module.exports = {
