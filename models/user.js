@@ -12,9 +12,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  patronymic: {
+  middleName: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
@@ -51,6 +50,7 @@ const userSchema = new mongoose.Schema({
     default: false,
     select: false,
   },
+  // for verify user from email
   hash: {
     type: String,
     select: false,

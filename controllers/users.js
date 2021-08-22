@@ -14,7 +14,6 @@ const ConflictError = require('../errors/conflict-err');
 const { notFoundErrors, notAuthErrors, generalErrors } = require('../constants/errorMessages');
 
 // const Role = require('../models/role');
-
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
@@ -24,7 +23,12 @@ const getUsers = (req, res, next) => {
 const createUser = async (req, res, next) => {
   // console.log('1');
   const {
-    firstName, lastName, patronymic, email, role, password,
+    firstName,
+    lastName,
+    middleName,
+    email,
+    role,
+    password,
   } = req.body;
 
   User.findOne({ email })
@@ -41,24 +45,25 @@ const createUser = async (req, res, next) => {
         from: 'Registration <club-vs@yandex.ru>',
         to: `${email}`,
         subject: 'Регистрация на vstorona.ru',
-        html: `
-              <a href="https://localhost:3000/users/activation/${encodeHash}">Активация</a>
+        html: `          
+              <a href="http://localhost:3002/users/activation/${encodeHash}">Активация local</a>
+              <a href="https://api.vs.didrom.ru/users/activation/${encodeHash}">Активация server</a>             
               `,
       };
-      // console.log(message);
+
       mailer(message)
         .then(() => {
           User.create({
             firstName,
             lastName,
-            patronymic,
+            middleName,
             email,
             role,
             password,
             hash: encodeHash,
             admin: isAdmin(email),
           })
-            .then((user) => res.send(user))
+            .then((user) => res.send({ _id: user._id }))
             .catch(next);
         })
         .catch(next);
@@ -75,9 +80,40 @@ const verifyUser = (req, res, next) => {
         throw new NotFoundError(notFoundErrors.userNotFound);
       }
       const { _id: userId } = user;
-      // верификация пользователя
+
       User.findByIdAndUpdate(userId, { verified: true, hash: '' })
-        .then((userUpdated) => res.send({ message: `Пользователь с email ${userUpdated.email} активирован` }))
+        .then((userUpdated) => {
+          const messageToUser = {
+            from: 'Registration <club-vs@yandex.ru>',
+            to: `${userUpdated.email}`,
+            subject: 'Регистрация на vstorona.ru',
+            html: `          
+                  <p>Ваша учетная запись активирована</p>                         
+                  `,
+          };
+
+          mailer(messageToUser)
+            .then(() => {
+              res.send({
+                message: `Пользователь с email ${userUpdated.email} активирован`,
+              });
+            })
+            .catch(next);
+          return userUpdated;
+        })
+        .then((userUpdated) => {
+          const messageToClub = {
+            from: 'Registration Service <club-vs@yandex.ru>',
+            to: 'club-vs@yandex.ru',
+            subject: 'New User on vstorona.ru activated',
+            html: `          
+                  <p>Новый пользователь с почтовым адресом ${userUpdated.email} добавлен и активирован</p>                         
+                  `,
+          };
+          mailer(messageToClub)
+            .then(() => null)
+            .catch(next);
+        })
         .catch(next);
     })
     .catch(next);
@@ -93,7 +129,6 @@ const deleteUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email);
 
   User.findOne({ email }).select('+password')
     .then((user) => {

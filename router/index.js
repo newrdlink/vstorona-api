@@ -11,7 +11,7 @@ const modifyReq = require('../middlewares/modifyReq');
 
 const {
   isValidBodyCreateUser,
-  // isValidBodyLoginUser
+  isValidBodyLoginUser,
 } = require('../utils/validateRequest');
 
 // const auth = require('../middlewares/auth');
@@ -36,9 +36,7 @@ router.use(modifyReq);
 // router.use('/public', publicRouter);
 
 router.post('/signup', isValidBodyCreateUser(), createUser);
-router.post('/signin',
-  // isValidBodyLoginUser(),
-  login);
+router.post('/signin', isValidBodyLoginUser(), login);
 
 router.use('/workers', workersRouter);
 router.use('/users', usersRouter);

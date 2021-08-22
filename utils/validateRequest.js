@@ -4,10 +4,8 @@ const isValidBodyCreateUser = () => celebrate({
   body: Joi.object().keys({
     firstName: Joi.string().required().min(2).max(30),
     lastName: Joi.string().required().min(2).max(30),
-    patronymic: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(6).max(26),
-    role: Joi.string().min(6).max(26),
   }),
 });
 
