@@ -6,6 +6,7 @@ const isValidBodyCreateUser = () => celebrate({
     lastName: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(6).max(26),
+    middleName: Joi.string().min(3).max(25),
   }),
 });
 
