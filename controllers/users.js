@@ -20,6 +20,12 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
+const getUserAuth = (req, res, next) => {
+  User.findById(req.user.id)
+    .then((user) => res.send(user))
+    .catch(next);
+};
+
 const createUser = async (req, res, next) => {
   // console.log('1');
   const {
@@ -138,8 +144,11 @@ const login = (req, res, next) => {
         verifyPass(password, user.password)
           .then((match) => {
             if (match) {
+              const { firstName, lastName, middleName } = user;
               const token = jwt.sign({ id: user._id }, JWT_WORD, { expiresIn: '7d' });
-              return res.send({ token });
+              return res.send({
+                token, firstName, lastName, middleName,
+              });
             }
             throw new NotAuthError(notAuthErrors.badEmailOrPass);
           })
@@ -151,6 +160,7 @@ const login = (req, res, next) => {
 
 module.exports = {
   getUsers,
+  getUserAuth,
   createUser,
   verifyUser,
   deleteUser,
