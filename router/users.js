@@ -1,5 +1,12 @@
 const router = require('express').Router();
-const { getUsers, createUser, verifyUser } = require('../controllers/users');
+
+const {
+  getUsers,
+  createUser,
+  verifyUser,
+  getUserAuth,
+} = require('../controllers/users');
+
 const { isValidBodyCreateUser } = require('../utils/validateRequest');
 
 // const auth = require('../middlewares/auth');
@@ -7,6 +14,7 @@ const { isValidBodyCreateUser } = require('../utils/validateRequest');
 router.get('/activation/:hash', verifyUser);
 
 router.get('/', getUsers);
+router.get('/me', getUserAuth);
 
 // router.use('/', auth);
 
