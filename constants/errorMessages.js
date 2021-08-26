@@ -1,6 +1,7 @@
 const notFoundErrors = {
   badToken: 'Проблемы с токеном',
   workerNotFound: 'Уже нет такого работника',
+  documentNotFound: 'Уже нет такого документа',
   userNotFound: 'Нет такого пользователя',
   badPath: ' - нет такого пути',
   folderNoFounded: 'А папки на сервере такой нет',

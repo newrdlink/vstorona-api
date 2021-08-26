@@ -5,6 +5,7 @@ const { login, createUser } = require('../controllers/users');
 const workersRouter = require('./workers');
 const usersRouter = require('./users');
 const newsRouter = require('./news');
+const documentsRouter = require('./documents');
 // const publicRouter = require('./public');
 
 const modifyReq = require('../middlewares/modifyReq');
@@ -41,5 +42,5 @@ router.post('/signin', isValidBodyLoginUser(), login);
 router.use('/workers', workersRouter);
 router.use('/users', usersRouter);
 router.use('/news', newsRouter);
-
+router.use('/documents', documentsRouter);
 module.exports = router;
