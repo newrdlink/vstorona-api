@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const moment = require('moment');
+// const moment = require('moment');
 
-const currentDate = moment().utc(3);
+// const currentDate = moment().utc(3);
 
 const documentSchema = new mongoose.Schema({
   type: {
@@ -10,7 +10,7 @@ const documentSchema = new mongoose.Schema({
     enum: [
       'Нормативные документы',
       'Стандарты безопасной организации труда работников',
-      'Планы и отчёты финансово-хозяйственной деятельности',
+      'Планы и отчёты финансово-хозяйственной  деятельности',
       'Положение об организации деятельности по оказанию платных услуг',
       'Государственное задание',
     ],
@@ -32,8 +32,8 @@ const documentSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    // default: Date.now,
-    default: currentDate,
+    default: Date.now,
+    // default: currentDate,
   },
 });
 

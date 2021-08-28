@@ -38,13 +38,18 @@ const deleteDocument = (req, res, next) => {
 };
 
 const patchDocument = (req, res, next) => {
-  const { id: _id } = req.params;
-
-  const { title, link } = req.body;
+  // const { id: _id } = req.params;
+  const {
+    title,
+    link,
+    type,
+    _id,
+  } = req.body;
 
   Document.findByIdAndUpdate(_id, {
     title,
     link,
+    type,
   }, {
     new: true,
     runValidators: true,

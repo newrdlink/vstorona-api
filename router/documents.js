@@ -9,6 +9,6 @@ const {
 router.get('/', getDocuments);
 router.post('/', createDocument);
 router.delete('/:id', deleteDocument);
-router.patch('/:id', patchDocument);
+router.patch('/', patchDocument);
 
 module.exports = router;
