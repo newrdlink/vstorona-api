@@ -1,7 +1,9 @@
 const Document = require('../models/document');
 
 const NotFoundError = require('../errors/not-found-err');
-const { notFoundErrors } = require('../constants/errorMessages');
+const { notFoundErrors, notAuthErrors } = require('../constants/errorMessages');
+const NotAuthError = require('../errors/not-auth-err');
+
 // const user = require('../models/user');
 
 const getDocuments = (req, res, next) => {
@@ -13,10 +15,12 @@ const getDocuments = (req, res, next) => {
 const createDocument = (req, res, next) => {
   const { type, title, link } = req.body;
 
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
   console.log('add document');
-  console.log(type);
 
-  Document.create({
+  return Document.create({
     type,
     title,
     link,
@@ -29,7 +33,11 @@ const createDocument = (req, res, next) => {
 const deleteDocument = (req, res, next) => {
   const { id: _id } = req.params;
 
-  Document.findByIdAndDelete({ _id })
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
+  return Document.findByIdAndDelete({ _id })
     .orFail(() => {
       throw new NotFoundError(notFoundErrors.documentNotFound);
     })
@@ -39,6 +47,11 @@ const deleteDocument = (req, res, next) => {
 
 const patchDocument = (req, res, next) => {
   // const { id: _id } = req.params;
+
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
   const {
     title,
     link,
@@ -46,7 +59,7 @@ const patchDocument = (req, res, next) => {
     _id,
   } = req.body;
 
-  Document.findByIdAndUpdate(_id, {
+  return Document.findByIdAndUpdate(_id, {
     title,
     link,
     type,

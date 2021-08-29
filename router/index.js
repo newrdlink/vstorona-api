@@ -6,6 +6,7 @@ const workersRouter = require('./workers');
 const usersRouter = require('./users');
 const newsRouter = require('./news');
 const documentsRouter = require('./documents');
+const achievementsRouter = require('./achievements');
 // const publicRouter = require('./public');
 
 const modifyReq = require('../middlewares/modifyReq');
@@ -43,4 +44,6 @@ router.use('/workers', workersRouter);
 router.use('/users', usersRouter);
 router.use('/news', newsRouter);
 router.use('/documents', documentsRouter);
+router.use('/achievements', achievementsRouter);
+
 module.exports = router;
