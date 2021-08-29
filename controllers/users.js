@@ -41,14 +41,13 @@ const createUser = async (req, res, next) => {
     password,
   } = req.body;
 
-  if (!isUserAccess(emailsUser, email)) {
-    throw next(new NotAuthError(notAuthErrors.notAccess));
-  }
-
   User.findOne({ email })
     .then((user) => {
       if (user) {
         throw next(new ConflictError(generalErrors.emailRepeat));
+      }
+      if (!isUserAccess(emailsUser, email)) {
+        throw next(new NotAuthError(notAuthErrors.notAccess));
       }
       return createHash(email, SALT);
     })
