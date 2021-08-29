@@ -22,7 +22,7 @@ const createAchievement = (req, res, next) => {
   console.log('add Achievement');
   console.log(req.user.id);
 
-  Achievement.create({
+  return Achievement.create({
     type,
     title,
     link,
@@ -39,7 +39,7 @@ const deleteAchievement = (req, res, next) => {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
 
-  Achievement.findByIdAndDelete({ _id })
+  return Achievement.findByIdAndDelete({ _id })
     .orFail(() => {
       throw new NotFoundError(notFoundErrors.achievementNotFound);
     })
@@ -61,7 +61,7 @@ const patchAchievement = (req, res, next) => {
     _id,
   } = req.body;
 
-  Achievement.findByIdAndUpdate(_id, {
+  return Achievement.findByIdAndUpdate(_id, {
     title,
     link,
     type,
