@@ -13,6 +13,9 @@ const NotAuthError = require('../errors/not-auth-err');
 const ConflictError = require('../errors/conflict-err');
 const { notFoundErrors, notAuthErrors, generalErrors } = require('../constants/errorMessages');
 
+const isUserAccess = require('../helpers/isUserAccess');
+const emailsUser = require('../constants/emailsUser');
+
 // const Role = require('../models/role');
 const getUsers = (req, res, next) => {
   User.find({})
@@ -27,6 +30,7 @@ const getUserAuth = (req, res, next) => {
 };
 
 const createUser = async (req, res, next) => {
+  // console.log(emailsUser);
   // console.log('1');
   const {
     firstName,
@@ -36,6 +40,10 @@ const createUser = async (req, res, next) => {
     role,
     password,
   } = req.body;
+
+  if (!isUserAccess(emailsUser, email)) {
+    throw next(new NotAuthError(notAuthErrors.notAccess));
+  }
 
   User.findOne({ email })
     .then((user) => {

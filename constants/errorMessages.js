@@ -17,6 +17,7 @@ const notAuthErrors = {
   reAuth: 'Необходима повторная авторизация',
   userNotFound: 'Нет такого пользователя',
   badEmailOrPass: 'Не правильный email или пароль',
+  notAccess: 'Вы не можете зарегистрировать аккаунт',
 };
 
 const errorsInModels = {
