@@ -4,12 +4,14 @@ const {
   getHalls,
   getHall,
   createHall,
-  updateHall,
+  // addItemToDescriptionHall,
+  patchItemToDescriptionHall,
 } = require('../controllers/halls');
 
 router.get('/', getHalls);
 router.get('/:type', getHall);
 router.post('/', createHall);
-router.patch('/:type', updateHall);
+// router.post('/:type', addItemToDescriptionHall);
+router.patch('/:type', patchItemToDescriptionHall);
 
 module.exports = router;

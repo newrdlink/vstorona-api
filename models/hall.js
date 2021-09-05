@@ -49,28 +49,23 @@ const hallSchema = new mongoose.Schema({
     required: true,
   },
 
-  composition: {
-    administrator: {
-      type: Boolean,
-      required: true,
-    },
-    wardrobe: {
-      type: Boolean,
-      required: true,
-    },
-    assistant: {
-      type: Boolean,
-      required: true,
-    },
-    cleaning: {
-      type: Boolean,
-      required: true,
-    },
+  compositionServices: {
+    item: [{
+      type: String,
+    }],
+    default: [],
+  },
+
+  descriptionServices: {
+    item: [{
+      type: String,
+    }],
+    default: [],
   },
 
   soundServices: {
-    type: [{
-      String,
+    item: [{
+      type: String,
     }],
     default: [],
   },

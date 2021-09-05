@@ -23,10 +23,8 @@ const createHall = (req, res, next) => {
     linkToPrice,
     ps,
   } = req.body;
-
   // const { title } = description;
   // console.log(1, description);
-
   Hall.create({
     type,
     price,
@@ -35,25 +33,29 @@ const createHall = (req, res, next) => {
     linkToPrice,
     ps,
   })
-    .then((hall) => console.log(hall))
+    .then((hall) => res.send(hall))
     .catch(next);
 };
 
-const updateHall = (req, res, next) => {
+// const addItemToDescriptionHall = (req, res, next) => {
+//   const { type } = req.params;
+//   const { item } = req.body;
+
+// };
+
+const patchItemToDescriptionHall = (req, res, next) => {
   const { type } = req.params;
-  const { name, link } = req.body;
-  // console.log(type)
+  const { data } = req.body;
+  // console.log(type);
+  // console.log(data);
+
   Hall.findOneAndUpdate(
     { type },
     {
-      $addToSet: {
-        images: {
-          name, link,
-        },
-      },
+      $addToSet: data,
     },
   )
-    .then((hall) => console.log(hall))
+    .then((hall) => res.send(hall))
     .catch(next);
 };
 
@@ -61,5 +63,6 @@ module.exports = {
   getHalls,
   getHall,
   createHall,
-  updateHall,
+  patchItemToDescriptionHall,
+  // addItemToDescriptionHall,
 };
