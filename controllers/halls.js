@@ -42,13 +42,10 @@ const createHall = (req, res, next) => {
 //   const { item } = req.body;
 
 // };
-
-const patchItemToDescriptionHall = (req, res, next) => {
+const addItemToDescriptionHall = (req, res, next) => {
   const { type } = req.params;
   const { data } = req.body;
-  // console.log(type);
   // console.log(data);
-
   Hall.findOneAndUpdate(
     { type },
     {
@@ -62,7 +59,6 @@ const patchItemToDescriptionHall = (req, res, next) => {
 const deleteItemDescriptionHall = (req, res, next) => {
   const { type } = req.params;
   const { data } = req.body;
-  // console.log(type);
   // console.log(data);
   Hall.findOneAndUpdate(
     { type },
@@ -73,12 +69,36 @@ const deleteItemDescriptionHall = (req, res, next) => {
     .then((hall) => res.send(hall))
     .catch(next);
 };
+const patchItemDescriptionHall = (req, res, next) => {
+  const { type } = req.params;
+  const { oldData, newData } = req.body;
+  // console.log(oldData);
+  // console.log(newData);
+  Hall.findOneAndUpdate(
+    { type },
+    {
+      $pull: oldData,
+    },
+  )
+    .then(() => {
+      Hall.findOneAndUpdate(
+        { type },
+        {
+          $addToSet: newData,
+        },
+      )
+        .then((newHall) => res.send(newHall))
+        .catch(next);
+    })
+    .catch(next);
+};
 
 module.exports = {
   getHalls,
   getHall,
   createHall,
-  patchItemToDescriptionHall,
+  addItemToDescriptionHall,
   deleteItemDescriptionHall,
+  patchItemDescriptionHall,
   // addItemToDescriptionHall,
 };
