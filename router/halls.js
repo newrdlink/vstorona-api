@@ -6,12 +6,14 @@ const {
   createHall,
   // addItemToDescriptionHall,
   patchItemToDescriptionHall,
+  deleteItemDescriptionHall,
 } = require('../controllers/halls');
 
 router.get('/', getHalls);
 router.get('/:type', getHall);
 router.post('/', createHall);
 // router.post('/:type', addItemToDescriptionHall);
-router.patch('/:type', patchItemToDescriptionHall);
+router.put('/:type', patchItemToDescriptionHall);
+router.delete('/:type', deleteItemDescriptionHall);
 
 module.exports = router;

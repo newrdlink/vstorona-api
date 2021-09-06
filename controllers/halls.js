@@ -59,10 +59,26 @@ const patchItemToDescriptionHall = (req, res, next) => {
     .catch(next);
 };
 
+const deleteItemDescriptionHall = (req, res, next) => {
+  const { type } = req.params;
+  const { data } = req.body;
+  // console.log(type);
+  // console.log(data);
+  Hall.findOneAndUpdate(
+    { type },
+    {
+      $pull: data,
+    },
+  )
+    .then((hall) => res.send(hall))
+    .catch(next);
+};
+
 module.exports = {
   getHalls,
   getHall,
   createHall,
   patchItemToDescriptionHall,
+  deleteItemDescriptionHall,
   // addItemToDescriptionHall,
 };
