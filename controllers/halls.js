@@ -1,5 +1,8 @@
 const Hall = require('../models/hall');
 
+const NotAuthError = require('../errors/not-auth-err');
+const { notAuthErrors } = require('../constants/errorMessages');
+
 const getHalls = (req, res, next) => {
   Hall.find({})
     .then((halls) => res.send(halls))
@@ -15,21 +18,30 @@ const getHall = (req, res, next) => {
 };
 
 const createHall = (req, res, next) => {
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
   const {
     type,
     price,
     description,
-    composition,
+    compositionServices,
+    descriptionServices,
+    soundServices,
+    images,
     linkToPrice,
     ps,
   } = req.body;
-  // const { title } = description;
-  // console.log(1, description);
-  Hall.create({
+
+  return Hall.create({
     type,
     price,
     description,
-    composition,
+    compositionServices,
+    descriptionServices,
+    soundServices,
+    images,
     linkToPrice,
     ps,
   })
@@ -37,16 +49,15 @@ const createHall = (req, res, next) => {
     .catch(next);
 };
 
-// const addItemToDescriptionHall = (req, res, next) => {
-//   const { type } = req.params;
-//   const { item } = req.body;
-
-// };
 const addItemToDescriptionHall = (req, res, next) => {
   const { type } = req.params;
   const { data } = req.body;
-  // console.log(data);
-  Hall.findOneAndUpdate(
+
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
+  return Hall.findOneAndUpdate(
     { type },
     {
       $addToSet: data,
@@ -56,11 +67,31 @@ const addItemToDescriptionHall = (req, res, next) => {
     .catch(next);
 };
 
+const putMainDescrHall = (req, res, next) => {
+  const { type } = req.params;
+  const { data } = req.body;
+
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
+  return Hall.findOneAndUpdate(
+    { type },
+    data,
+  )
+    .then((hall) => res.send(hall))
+    .catch(next);
+};
+
 const deleteItemDescriptionHall = (req, res, next) => {
   const { type } = req.params;
   const { data } = req.body;
-  // console.log(data);
-  Hall.findOneAndUpdate(
+
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
+  return Hall.findOneAndUpdate(
     { type },
     {
       $pull: data,
@@ -69,12 +100,16 @@ const deleteItemDescriptionHall = (req, res, next) => {
     .then((hall) => res.send(hall))
     .catch(next);
 };
+
 const patchItemDescriptionHall = (req, res, next) => {
   const { type } = req.params;
   const { oldData, newData } = req.body;
-  // console.log(oldData);
-  // console.log(newData);
-  Hall.findOneAndUpdate(
+
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
+  return Hall.findOneAndUpdate(
     { type },
     {
       $pull: oldData,
@@ -100,5 +135,5 @@ module.exports = {
   addItemToDescriptionHall,
   deleteItemDescriptionHall,
   patchItemDescriptionHall,
-  // addItemToDescriptionHall,
+  putMainDescrHall,
 };

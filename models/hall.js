@@ -35,11 +35,22 @@ const hallSchema = new mongoose.Schema({
       required: true,
     },
   },
-
+  // created with Object ID
+  // images: {
+  //   type: [{
+  //     name: String,
+  //     link: String,
+  //   }],
+  //   default: [],
+  // },
   images: {
     type: [{
-      name: String,
-      link: String,
+      name: {
+        type: String,
+      },
+      link: {
+        type: String,
+      },
     }],
     default: [],
   },
@@ -50,35 +61,29 @@ const hallSchema = new mongoose.Schema({
   },
 
   compositionServices: {
-    item: [{
+    type: [{
       type: String,
     }],
     default: [],
   },
 
   descriptionServices: {
-    item: [{
+    type: [{
       type: String,
     }],
     default: [],
   },
 
   soundServices: {
-    item: [{
+    type: [{
       type: String,
     }],
     default: [],
   },
 
   linkToPrice: {
-    name: {
-      type: String,
-      required: true,
-    },
-    link: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    required: true,
   },
 
   ps: {
