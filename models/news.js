@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
-
-const currentDate = moment().utc(3);
 
 const newsSchema = new mongoose.Schema({
   title: {
@@ -28,8 +25,7 @@ const newsSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    // default: Date.now,
-    default: currentDate,
+    default: Date.now,
   },
 });
 
