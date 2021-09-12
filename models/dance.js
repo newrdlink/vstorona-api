@@ -31,6 +31,18 @@ const danceSchema = new mongoose.Schema({
     type: String,
   },
 
+  images: {
+    type: [{
+      name: {
+        type: String,
+      },
+      link: {
+        type: String,
+      },
+    }],
+    default: [],
+  },
+
   compositionServices: {
     type: [{
       type: String,

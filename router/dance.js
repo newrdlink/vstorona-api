@@ -1,7 +1,8 @@
 const router = require('express').Router();
 
-const { getDance } = require('../controllers/dance');
+const { getDance, createDance } = require('../controllers/dance');
 
 router.get('/', getDance);
+router.post('/', createDance);
 
 module.exports = router;
