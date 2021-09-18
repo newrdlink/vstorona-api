@@ -4,11 +4,11 @@ const eventSchema = new mongoose.Schema({
 
   type: {
     type: String,
-    enum: ['festival'],
+    enum: ['default', 'festival'],
   },
 
   startTime: {
-    type: Date,
+    type: String,
     required: true,
   },
 
@@ -24,20 +24,9 @@ const eventSchema = new mongoose.Schema({
 
   link: {
     type: String,
-    required: true,
   },
 
-  images: {
-    type: [{
-      name: {
-        type: String,
-      },
-      link: {
-        type: String,
-      },
-    }],
-    default: [],
-  },
+  images: [],
 
   description: {
     type: [{
