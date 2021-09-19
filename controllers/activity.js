@@ -30,7 +30,7 @@ const createEvent = async (req, res, next) => {
     subtitle,
     startTime,
     type = 'default',
-    description = [],
+    description,
   } = eventData;
   // console.log(eventData);
   // console.log(images);
