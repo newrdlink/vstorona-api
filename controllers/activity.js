@@ -14,6 +14,13 @@ const getEvents = (req, res, next) => {
     .catch(next);
 };
 
+const getEvent = (res, req, next) => {
+  const { id: _id } = req.params;
+  Event.find({ _id })
+    .then((event) => res.send(event))
+    .catch(next);
+};
+
 const createEvent = async (req, res, next) => {
   // console.log(req.user.id);
   // console.log(req);
@@ -78,4 +85,4 @@ const createEvent = async (req, res, next) => {
   //   .catch(next);
 };
 
-module.exports = { getEvents, createEvent };
+module.exports = { getEvents, getEvent, createEvent };
