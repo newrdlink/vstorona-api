@@ -15,8 +15,10 @@ const getEvents = (req, res, next) => {
 };
 
 const getEvent = (res, req, next) => {
-  const { id: _id } = req.params;
-  Event.find({ _id })
+  const { id: _id } = req.req.params;
+  console.log(_id);
+
+  Event.findOne({ _id })
     .then((event) => res.send(event))
     .catch(next);
 };
