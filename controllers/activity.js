@@ -14,8 +14,8 @@ const getEvents = (req, res, next) => {
     .catch(next);
 };
 
-const getEvent = (res, req, next) => {
-  const { id: _id } = req.req.params;
+const getEvent = (req, res, next) => {
+  const { id: _id } = req.params;
   console.log(_id);
 
   Event.findOne({ _id })
