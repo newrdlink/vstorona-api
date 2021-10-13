@@ -4,7 +4,7 @@ const News = require('../models/news');
 
 const getNews = (req, res, next) => {
   News.find({})
-    .populate('creator')
+    // .populate('creator')
     .then((news) => res.send(news))
     .catch(next);
 };
