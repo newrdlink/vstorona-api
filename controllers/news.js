@@ -1,5 +1,5 @@
 const path = require('path');
-// const fs = require('fs');
+const fs = require('fs');
 const News = require('../models/news');
 
 const getNews = (req, res, next) => {
@@ -27,26 +27,30 @@ const createNews = (req, res, next) => {
   const folderNameNews = createdAt.slice(0, 16).replace(':', '');
   const dirPath = path.join(__dirname, '..', 'public/news', folderNameNews);
 
-  imagesFront.forEach((image) => {
-    const uploadPath = path.normalize(path.join(dirPath, image.name));
-    image.mv(uploadPath, (error) => {
-      if (error) { throw next(error); }
+  fs.mkdir(dirPath, (err) => {
+    if (err) {
+      throw next(err);
+    }
+    imagesFront.forEach((image) => {
+      const uploadPath = path.normalize(path.join(dirPath, image.name));
+      image.mv(uploadPath, (error) => {
+        if (error) { throw next(error); }
+      });
+      const pathImage = `https://api.vs.didrom.ru/events/${folderNameNews}/${image.name}`;
+      images.push(pathImage);
     });
-    const pathImage = `https://api.vs.didrom.ru/news/${folderNameNews}/${image.name}`;
-    images.push(pathImage);
-  });
 
-  // console.log();
-  News.create({
-    title,
-    subtitle,
-    images,
-    description,
-    createdAt,
-    creator: req.user.id,
-  })
-    .then((news) => res.send({ id: news.id }))
-    .catch(next);
+    News.create({
+      title,
+      subtitle,
+      images,
+      description,
+      createdAt,
+      creator: req.user.id,
+    })
+      .then((news) => res.send({ id: news.id }))
+      .catch(next);
+  });
 };
 
 module.exports = {
