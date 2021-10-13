@@ -36,7 +36,7 @@ const createNews = (req, res, next) => {
       image.mv(uploadPath, (error) => {
         if (error) { throw next(error); }
       });
-      const pathImage = `https://api.vs.didrom.ru/events/${folderNameNews}/${image.name}`;
+      const pathImage = `https://api.vs.didrom.ru/news/${folderNameNews}/${image.name}`;
       images.push(pathImage);
     });
 
