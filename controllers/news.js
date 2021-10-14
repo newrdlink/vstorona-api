@@ -2,10 +2,19 @@ const path = require('path');
 const fs = require('fs');
 const News = require('../models/news');
 
-const getNews = (req, res, next) => {
+const getNewsAll = (req, res, next) => {
   News.find({})
     // .populate('creator')
     .then((news) => res.send(news))
+    .catch(next);
+};
+
+const getNews = (req, res, next) => {
+  const { id: _id } = req.params;
+  // console.log(_id);
+
+  News.findOne({ _id })
+    .then((event) => res.send(event))
     .catch(next);
 };
 
@@ -54,6 +63,7 @@ const createNews = (req, res, next) => {
 };
 
 module.exports = {
+  getNewsAll,
   getNews,
   createNews,
   // verifyUser,
