@@ -14,6 +14,7 @@ const errCtl = require('./middlewares/handlerErrors');
 
 const app = express();
 
+// const whiteList = ['http://localhost:3000', '188.134.76.55'];
 app.use(cors());
 app.use(upload());
 
