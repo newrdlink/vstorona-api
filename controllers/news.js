@@ -62,10 +62,44 @@ const createNews = (req, res, next) => {
   });
 };
 
+const deleteNews = (req, res, next) => {
+  const { _id } = req.body;
+
+  News.findById(_id)
+    .then((news) => {
+      const { createdAt } = news;
+      const folderNameNews = createdAt.toISOString().slice(0, 16).replace(':', '');
+      const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/news', folderNameNews);
+
+      if (fs.existsSync(dirPath)) {
+        console.log(1, 'folder founded');
+        // // for remove dir from localhost DB and location file
+        // const pathFileName = path.normalize(cutExpStr(worker.image));
+        // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
+        // for remove dir from serverDB location file
+        // const dirPath = path.join('/home/newrdlink/projects/
+        // vs/backend/public/', preparePathForRmDir(worker.image));
+        fs.rmdirSync(dirPath, { recursive: true });
+        // console.log(2, dirPath);
+        News.findByIdAndRemove(_id)
+          .then(() => console.log('новость удалена из базы'))
+          .catch(next);
+        res.send(news);
+      }
+
+      console.log(2, news);
+      console.log(3, dirPath);
+    })
+    .catch((error) => console.log(error));
+
+  // console.log(_id);
+};
+
 module.exports = {
   getNewsAll,
   getNews,
   createNews,
+  deleteNews,
   // verifyUser,
   // deleteUser,
 };
