@@ -4,8 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const upload = require('express-fileupload');
-
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 
 const cors = require('cors');
@@ -20,8 +19,10 @@ app.use(upload());
 
 const { PORT = 3002 } = process.env;
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // To parse the incoming requests with JSON payloads
 
 mongoose.connect(BD_ADD, {
   useNewUrlParser: true,
