@@ -27,8 +27,8 @@ app.use(express.json()); // To parse the incoming requests with JSON payloads
 
 mongoose.connect(BD_ADD, {
   useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
+  // useCreateIndex: true,
+  // useFindAndModify: false,
   useUnifiedTopology: true,
 });
 
