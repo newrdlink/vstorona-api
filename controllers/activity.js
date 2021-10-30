@@ -3,7 +3,8 @@ const fs = require('fs');
 const Event = require('../models/event');
 
 // const cutExpStr = require('../helpers/cutExpansionFile');
-
+const NotAuthError = require('../errors/not-auth-err');
+const { notAuthErrors } = require('../constants/errorMessages');
 // const NotAuthError = require('../errors/not-auth-err');
 // const { notAuthErrors } = require('../constants/errorMessages');
 
@@ -16,7 +17,7 @@ const getEvents = (req, res, next) => {
 
 const getEvent = (req, res, next) => {
   const { id: _id } = req.params;
-  console.log(_id);
+  // console.log(_id);
 
   Event.findOne({ _id })
     .then((event) => res.send(event))
@@ -29,6 +30,9 @@ const createEvent = async (req, res, next) => {
   // if (!req.user) {
   //   return next(new NotAuthError(notAuthErrors.noAuth));
   // }
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
 
   // working case for upload files to MongoDB
   const eventData = JSON.parse(req.body.eventData);
@@ -72,19 +76,6 @@ const createEvent = async (req, res, next) => {
       .then((event) => res.send(event))
       .catch(next);
   });
-
-  // console.log(images);
-  // return Event.create({
-  //   type,
-  //   startTime,
-  //   title,
-  //   subtitle,
-  //   description,
-  //   images,
-  //   creator: req.user.id,
-  // })
-  //   .then((event) => res.send(event))
-  //   .catch(next);
 };
 
 const deleteEvent = (req, res, next) => {
