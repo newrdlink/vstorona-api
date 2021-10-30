@@ -16,7 +16,6 @@ const createCollective = (req, res, next) => {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
   // console.log(req.body.collectiveData);
-
   const collectiveData = JSON.parse(req.body.collectiveData);
   const imagesFront = req.files.imageFilesCollective;
 
@@ -60,10 +59,6 @@ const createCollective = (req, res, next) => {
   //   supervisor,
   //   position
   // } = collectiveData;
-
-  // Collective.create(collectiveData)
-  //   .then((collective) => res.send(collective))
-  //   .catch(next);
 };
 
 const deleteCollective = (req, res, next) => {
