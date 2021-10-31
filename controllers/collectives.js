@@ -14,7 +14,7 @@ const getCollectives = (req, res, next) => {
 const getCollective = (req, res, next) => {
   const { id: _id } = req.params;
 
-  Collective.find({ _id })
+  Collective.findOne({ _id })
     .then((collective) => res.send(collective))
     .catch(next);
 };
