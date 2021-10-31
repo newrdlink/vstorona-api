@@ -4,7 +4,7 @@ const collectiveSchema = new mongoose.Schema({
 
   type: {
     type: String,
-    enum: ['Для детей', 'Для взрослых', 'Для молодёжи'],
+    enum: ['kids', 'youngs', 'adults'],
     required: true,
   },
 
@@ -16,12 +16,12 @@ const collectiveSchema = new mongoose.Schema({
   subtype: {
     type: String,
     enum: [
-      'Декоративно-прикладное творчество',
-      'Танцевальные',
-      'Вокальные',
-      'Театральные',
-      'Изобразительное искусство',
-      'Фотоискусство',
+      'arts and crafts',
+      'dance',
+      'vocal',
+      'theatrical',
+      'art',
+      'photography art',
     ],
     required: true,
   },
