@@ -10,6 +10,7 @@ const achievementsRouter = require('./achievements');
 const hallsRouter = require('./halls');
 const danceRouter = require('./dance');
 const activityRouter = require('./activity');
+const collectivesRouter = require('./collectives');
 // const publicRouter = require('./public');
 
 const modifyReq = require('../middlewares/modifyReq');
@@ -32,5 +33,6 @@ router.use('/achievements', achievementsRouter);
 router.use('/halls', hallsRouter);
 router.use('/dance', danceRouter);
 router.use('/activity', activityRouter);
+router.use('/collectives', collectivesRouter);
 
 module.exports = router;

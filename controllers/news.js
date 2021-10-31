@@ -2,6 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const News = require('../models/news');
 
+const NotAuthError = require('../errors/not-auth-err');
+const { notAuthErrors } = require('../constants/errorMessages');
+
 const getNewsAll = (req, res, next) => {
   News.find({})
     // .populate('creator')
@@ -12,7 +15,6 @@ const getNewsAll = (req, res, next) => {
 const getNews = (req, res, next) => {
   const { id: _id } = req.params;
   // console.log(_id);
-
   News.findOne({ _id })
     .then((event) => res.send(event))
     .catch(next);
@@ -20,6 +22,9 @@ const getNews = (req, res, next) => {
 
 const createNews = (req, res, next) => {
   // console.log('1');
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
 
   const newsData = JSON.parse(req.body.newsData);
   const imagesFront = req.files.imageFilesNews;
@@ -63,6 +68,9 @@ const createNews = (req, res, next) => {
 };
 
 const deleteNews = (req, res, next) => {
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
   const { _id } = req.body;
 
   News.findById(_id)
