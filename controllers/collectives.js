@@ -11,6 +11,14 @@ const getCollectives = (req, res, next) => {
     .catch(next);
 };
 
+const getCollective = (req, res, next) => {
+  const { id: _id } = req.params;
+
+  Collective.find({ _id })
+    .then((collective) => res.send(collective))
+    .catch(next);
+};
+
 const createCollective = (req, res, next) => {
   if (!req.user) {
     return next(new NotAuthError(notAuthErrors.noAuth));
@@ -73,6 +81,7 @@ const updateCollective = (req, res, next) => {
 
 module.exports = {
   getCollectives,
+  getCollective,
   createCollective,
   deleteCollective,
   updateCollective,

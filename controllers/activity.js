@@ -51,7 +51,7 @@ const createEvent = async (req, res, next) => {
   // dirPath = C:\dev\my\vstorona-api\public\events\2021-09-25T1830
   const images = [];
   // working but array images empty
-  fs.mkdir(dirPath, (err) => {
+  return fs.mkdir(dirPath, (err) => {
     if (err) {
       throw next(err);
     }

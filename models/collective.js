@@ -30,6 +30,7 @@ const collectiveSchema = new mongoose.Schema({
 
   supervisor: {
     type: String,
+    required: true,
   },
 
   position: [],
