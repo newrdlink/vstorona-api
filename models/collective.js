@@ -9,8 +9,8 @@ const collectiveSchema = new mongoose.Schema({
   },
 
   chosen: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: '',
   },
 
   subtype: {
