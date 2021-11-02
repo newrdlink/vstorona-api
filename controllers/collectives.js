@@ -51,7 +51,7 @@ const createCollective = (req, res, next) => {
     Collective.create(collectiveData)
       .then((collective) => res.send(collective))
       // necessary add logic, when create in Mongo will create error, the folder
-      // created previously, must be remove
+      // created previously, must be remove !!!
       .catch(next);
   });
 };
