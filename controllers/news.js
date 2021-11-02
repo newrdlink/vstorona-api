@@ -41,7 +41,7 @@ const createNews = (req, res, next) => {
   const folderNameNews = createdAt.slice(0, 16).replace(':', '');
   const dirPath = path.join(__dirname, '..', 'public/news', folderNameNews);
 
-  fs.mkdir(dirPath, (err) => {
+  return fs.mkdir(dirPath, (err) => {
     if (err) {
       throw next(err);
     }
@@ -73,7 +73,7 @@ const deleteNews = (req, res, next) => {
   }
   const { _id } = req.body;
 
-  News.findById(_id)
+  return News.findById(_id)
     .then((news) => {
       const { createdAt } = news;
       const folderNameNews = createdAt.toISOString().slice(0, 16).replace(':', '');
