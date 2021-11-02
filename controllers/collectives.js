@@ -57,7 +57,29 @@ const createCollective = (req, res, next) => {
 };
 
 const deleteCollective = (req, res, next) => {
+  const { id: _id } = req.params;
 
+  Collective.findByIdAndRemove(_id)
+    .then((collective) => {
+      // console.log(typeof collective.createdAt);
+      const folderNameCollective = collective.createdAt.toISOString().slice(0, 16).replace(':', '');
+      // console.log(typeof folderNameNews);
+      const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/collectives', folderNameCollective);
+      // console.log(dirPath);
+      if (fs.existsSync(dirPath)) {
+        console.log(1, 'folder founded');
+        // // for remove dir from localhost DB and location file
+        // const pathFileName = path.normalize(cutExpStr(worker.image));
+        // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
+        // for remove dir from serverDB location file
+        // const dirPath = path.join('/home/newrdlink/projects/
+        // vs/backend/public/', preparePathForRmDir(worker.image));
+        fs.rmdirSync(dirPath, { recursive: true });
+        console.log('папка удалена');
+      }
+      res.send(collective);
+    })
+    .catch(next);
 };
 
 const updateCollective = (req, res, next) => {
