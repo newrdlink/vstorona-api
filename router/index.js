@@ -11,6 +11,7 @@ const hallsRouter = require('./halls');
 const danceRouter = require('./dance');
 const activityRouter = require('./activity');
 const collectivesRouter = require('./collectives');
+const anticorrdocsRouter = require('./anticorrdocs');
 // const publicRouter = require('./public');
 
 const modifyReq = require('../middlewares/modifyReq');
@@ -34,5 +35,6 @@ router.use('/halls', hallsRouter);
 router.use('/dance', danceRouter);
 router.use('/activity', activityRouter);
 router.use('/collectives', collectivesRouter);
+router.use('/anticorrdocs', anticorrdocsRouter);
 
 module.exports = router;
