@@ -20,7 +20,7 @@ const createVideo = (req, res, next) => {
   const { title, link, description } = req.body;
   if (!req.user) {
     return next(new NotAuthError(notAuthErrors.noAuth));
-  }
+  };
 
   Video.create({ title, link, description })
     .then((video) => res.send(video))
@@ -29,6 +29,9 @@ const createVideo = (req, res, next) => {
 
 const deleteVideo = (req, res, next) => {
   const { id: _id } = req.params;
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  };
 
   Video.findOneAndDelete({ _id })
     .then((video) => res.send(video))
