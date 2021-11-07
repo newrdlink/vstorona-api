@@ -1,4 +1,6 @@
 const Video = require('../models/video');
+const NotAuthError = require('../errors/not-auth-err');
+const { notAuthErrors } = require('../constants/errorMessages');
 
 const getVideoAll = (req, res, next) => {
   Video.find()
@@ -16,6 +18,9 @@ const getVideo = (req, res, next) => {
 
 const createVideo = (req, res, next) => {
   const { title, link, description } = req.body;
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
 
   Video.create({ title, link, description })
     .then((video) => res.send(video))
