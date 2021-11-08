@@ -13,8 +13,8 @@ const activityRouter = require('./activity');
 const collectivesRouter = require('./collectives');
 const anticorrdocsRouter = require('./anticorrdocs');
 const videoRouter = require('./video');
+const albumRouter = require('./album');
 // const publicRouter = require('./public');
-
 const modifyReq = require('../middlewares/modifyReq');
 
 const {
@@ -38,5 +38,6 @@ router.use('/activity', activityRouter);
 router.use('/collectives', collectivesRouter);
 router.use('/anticorrdocs', anticorrdocsRouter);
 router.use('/video', videoRouter);
+router.use('/photo', albumRouter);
 
 module.exports = router;
