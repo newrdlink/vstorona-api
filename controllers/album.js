@@ -5,7 +5,7 @@ const NotAuthError = require('../errors/not-auth-err');
 const { notAuthErrors } = require('../constants/errorMessages');
 
 const getAlbums = (req, res, next) => {
-  console.log('get albums');
+  // console.log('get albums');
   Album.find()
     .then((albums) => res.send(albums))
     .catch(next);
@@ -15,10 +15,18 @@ const getAlbum = (req, res, next) => {
   console.log('get album');
 };
 
+const deleteAlbum = (req, res, next) => {
+  const { id: _id } = req.params;
+  console.log('delete album');
+  Album.findByIdAndDelete({ _id })
+    .then((album) => res.sen(album))
+    .catch(next);
+};
+
 const createAlbum = (req, res, next) => {
-  console.log('create album');
+  // console.log('create album');
   if (!req.user) {
-    console.log('error');
+    // console.log('error');
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
   const albumData = JSON.parse(req.body.albumData);
@@ -50,22 +58,11 @@ const createAlbum = (req, res, next) => {
       .then((album) => res.send(album))
       .catch(next);
   });
-  // imagesFront.forEach((image) => {
-  //   const uploadPath = path.normalize(path.join(dirPath, image.name));
-  //   image.mv(uploadPath, (error) => {
-  //     if (error) { throw next(error); }
-  //   });
-  //   const pathImage = `https://api.vs.didrom.ru/album/${folderNameAlbum}/${image.name}`;
-  //   images.push(pathImage);
-  // });
-
-  // return Album.create(albumData)
-  //   .then((album) => res.send(album))
-  //   .catch(next);
 };
 
 module.exports = {
   getAlbums,
   getAlbum,
   createAlbum,
+  deleteAlbum,
 };
