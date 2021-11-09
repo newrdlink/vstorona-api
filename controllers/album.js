@@ -19,7 +19,7 @@ const deleteAlbum = (req, res, next) => {
   const { id: _id } = req.params;
   console.log('delete album');
   Album.findByIdAndDelete({ _id })
-    .then((album) => res.sen(album))
+    .then((album) => res.send(album))
     .catch(next);
 };
 
