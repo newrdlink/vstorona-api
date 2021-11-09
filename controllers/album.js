@@ -18,8 +18,30 @@ const getAlbum = (req, res, next) => {
 const deleteAlbum = (req, res, next) => {
   const { id: _id } = req.params;
   console.log('delete album');
+
   Album.findByIdAndDelete({ _id })
-    .then((album) => res.send(album))
+    .then((album) => {
+      const { createdAt } = album;
+      const folderNameAlbum = createdAt.toISOString().slice(0, 16).replace(':', '');
+      const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/album', folderNameAlbum);
+
+      if (fs.existsSync(dirPath)) {
+        console.log(1, 'folder founded');
+        // // for remove dir from localhost DB and location file
+        // const pathFileName = path.normalize(cutExpStr(worker.image));
+        // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
+        // for remove dir from serverDB location file
+        // const dirPath = path.join('/home/newrdlink/projects/
+        // vs/backend/public/', preparePathForRmDir(worker.image));
+        fs.rmdirSync(dirPath, { recursive: true });
+        // console.log(2, dirPath);
+        // News.findByIdAndRemove(_id)
+        //   .then(() => console.log('новость удалена из базы'))
+        //   .catch(next);
+        // res.send(news);
+      }
+      res.send(album);
+    })
     .catch(next);
 };
 
