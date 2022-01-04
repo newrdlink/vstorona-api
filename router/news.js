@@ -4,6 +4,7 @@ const {
   getNewsAll,
   getNews,
   deleteNews,
+  updateNews,
 } = require('../controllers/news');
 
 // const { isAuthUser } = require('../utils/validateRequest');
@@ -11,6 +12,7 @@ const {
 router.get('/', getNewsAll);
 router.get('/:id', getNews);
 router.delete('/', deleteNews);
+router.patch('/', updateNews);
 
 router.post('/', createNews);
 

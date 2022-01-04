@@ -67,6 +67,59 @@ const createNews = (req, res, next) => {
   });
 };
 
+const updateNews = (req, res, next) => {
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+
+  const newsData = JSON.parse(req.body.newsData);
+
+  if (!req.files) {
+    // const { _id } = collectiveData;
+    News.findByIdAndUpdate(newsData._id, newsData)
+      .then((collective) => res.send(collective))
+      .catch(next);
+    // console.log(collectiveData);
+  } else {
+    const imagesFront = req.files.imageFilesNews;
+
+    const folderNameNews = newsData.createdAt.slice(0, 16).replace(':', '');
+    const dirPath = path.join(__dirname, '..', 'public/news', folderNameNews);
+
+    if (fs.existsSync(dirPath)) {
+      // remove dir
+      // console.log('folder founded');
+      fs.rmdirSync((dirPath), { recursive: true });
+      console.log('папка новости удалена при обновлении');
+    }
+    const images = [];
+
+    fs.mkdir(dirPath, (err) => {
+      if (err) {
+        throw next(err);
+      }
+
+      imagesFront.forEach((image) => {
+        const uploadPath = path.normalize(path.join(dirPath, image.name));
+        image.mv(uploadPath, (error) => {
+          if (error) { throw next(error); }
+        });
+        const pathImage = `https://api.vs.didrom.ru/news/${folderNameNews}/${image.name}`;
+        images.push(pathImage);
+      });
+      // collectiveData.creator = req.user.id;
+      newsData.images = images;
+
+      News.findByIdAndUpdate(newsData._id, newsData)
+        .then((collective) => res.send(collective))
+        // necessary add logic, when create in Mongo will create error, the folder
+        // created previously, must be remove
+        .catch(next);
+    });
+  }
+  return null;
+};
+
 const deleteNews = (req, res, next) => {
   if (!req.user) {
     return next(new NotAuthError(notAuthErrors.noAuth));
@@ -94,7 +147,6 @@ const deleteNews = (req, res, next) => {
           .catch(next);
         res.send(news);
       }
-
       console.log(2, news);
       console.log(3, dirPath);
     })
@@ -108,6 +160,7 @@ module.exports = {
   getNews,
   createNews,
   deleteNews,
+  updateNews,
   // verifyUser,
   // deleteUser,
 };
