@@ -22,7 +22,7 @@ const createVideo = (req, res, next) => {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
 
-  Video.create({ title, link, description })
+  return Video.create({ title, link, description })
     .then((video) => res.send(video))
     .catch(next);
 };
@@ -33,7 +33,7 @@ const deleteVideo = (req, res, next) => {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
 
-  Video.findOneAndDelete({ _id })
+  return Video.findOneAndDelete({ _id })
     .then((video) => res.send(video))
     .catch(next);
 };
