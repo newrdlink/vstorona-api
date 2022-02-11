@@ -7,7 +7,6 @@ const NotAuthError = require('../errors/not-auth-err');
 const { notAuthErrors } = require('../constants/errorMessages');
 // const NotAuthError = require('../errors/not-auth-err');
 // const { notAuthErrors } = require('../constants/errorMessages');
-
 const getEvents = (req, res, next) => {
   // console.log(1);
   Event.find({})
@@ -18,23 +17,15 @@ const getEvents = (req, res, next) => {
 const getEvent = (req, res, next) => {
   const { id: _id } = req.params;
   // console.log(_id);
-
   Event.findOne({ _id })
     .then((event) => res.send(event))
     .catch(next);
 };
 
 const createEvent = async (req, res, next) => {
-  // console.log(req.user.id);
-  // console.log(req);
-  // if (!req.user) {
-  //   return next(new NotAuthError(notAuthErrors.noAuth));
-  // }
   if (!req.user) {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
-
-  // working case for upload files to MongoDB
   const eventData = JSON.parse(req.body.eventData);
   const imagesFront = req.files.imageFilesEvent;
 
@@ -45,12 +36,10 @@ const createEvent = async (req, res, next) => {
     type = 'default',
     description,
   } = eventData;
-  // console.log(eventData);
-  // console.log(images);
+
   const dirPath = path.join(__dirname, '..', 'public/events', startTime.replace(':', ''));
-  // dirPath = C:\dev\my\vstorona-api\public\events\2021-09-25T1830
   const images = [];
-  // working but array images empty
+
   return fs.mkdir(dirPath, (err) => {
     if (err) {
       throw next(err);
@@ -78,6 +67,50 @@ const createEvent = async (req, res, next) => {
   });
 };
 
+const updateEvent = (req, res, next) => {
+  if (!req.user) {
+    return next(new NotAuthError(notAuthErrors.noAuth));
+  }
+  const eventData = JSON.parse(req.body.eventData);
+
+  if (!req.files) {
+    // console.log(eventData);
+    Event.findByIdAndUpdate(eventData._id, eventData)
+      .then((event) => res.send(event))
+      .catch(next);
+  } else {
+    const imagesFront = req.files.imageFilesEvent;
+    const folderNameEvent = eventData.startTime.replace(':', '');
+
+    const dirPath = path.join(__dirname, '..', 'public/events', folderNameEvent);
+    if (fs.existsSync(dirPath)) {
+      fs.rmdirSync((dirPath), { recursive: true });
+      console.log('folder removed after update');
+    }
+    const images = [];
+
+    return fs.mkdir(dirPath, (err) => {
+      if (err) {
+        throw next(err);
+      }
+      imagesFront.forEach((image) => {
+        const uploadPath = path.normalize(path.join(dirPath, image.name));
+        image.mv(uploadPath, (error) => {
+          if (error) { throw next(error); }
+        });
+        const pathImage = `https://api.vs.didrom.ru/events/${folderNameEvent}/${image.name}`;
+        images.push(pathImage);
+      });
+      eventData.images = images;
+
+      Event.findByIdAndUpdate(eventData._id, eventData)
+        .then((event) => res.send(event))
+        .catch(next);
+    });
+  }
+  return null;
+};
+
 const deleteEvent = (req, res, next) => {
   const { _id } = req.body;
 
@@ -88,25 +121,15 @@ const deleteEvent = (req, res, next) => {
       const dirPath = path.join('/home/newrdlink/projects/vs/backend/public/events', folderNameNews);
 
       if (fs.existsSync(dirPath)) {
-        console.log(1, 'folder founded');
-        // // for remove dir from localhost DB and location file
-        // const pathFileName = path.normalize(cutExpStr(worker.image));
-        // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
-        // for remove dir from serverDB location file
-        // const dirPath = path.join('/home/newrdlink/projects/
-        // vs/backend/public/', preparePathForRmDir(worker.image));
         fs.rmdirSync(dirPath, { recursive: true });
         // console.log(2, dirPath);
         Event.findByIdAndRemove(_id)
-          .then(() => console.log('событие удалено из базы'))
+          .then(() => console.log('event removed'))
           .catch(next);
         res.send(event);
       }
-
-      console.log(2, event);
-      console.log(3, dirPath);
     })
-    .catch((error) => console.log(error));
+    .catch(next);
 };
 
 module.exports = {
@@ -114,4 +137,5 @@ module.exports = {
   getEvent,
   createEvent,
   deleteEvent,
+  updateEvent,
 };
