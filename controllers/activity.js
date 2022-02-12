@@ -7,6 +7,9 @@ const NotAuthError = require('../errors/not-auth-err');
 const { notAuthErrors } = require('../constants/errorMessages');
 // const NotAuthError = require('../errors/not-auth-err');
 // const { notAuthErrors } = require('../constants/errorMessages');
+
+const MAIN_URL = 'https://api.vstorona.ru';
+
 const getEvents = (req, res, next) => {
   // console.log(1);
   Event.find({})
@@ -49,7 +52,7 @@ const createEvent = async (req, res, next) => {
       image.mv(uploadPath, (error) => {
         if (error) { throw next(error); }
       });
-      const pathImage = `https://api.vs.didrom.ru/events/${startTime.replace(':', '')}/${image.name}`;
+      const pathImage = `${MAIN_URL}/events/${startTime.replace(':', '')}/${image.name}`;
       images.push(pathImage);
     });
 
@@ -98,7 +101,7 @@ const updateEvent = (req, res, next) => {
         image.mv(uploadPath, (error) => {
           if (error) { throw next(error); }
         });
-        const pathImage = `https://api.vs.didrom.ru/events/${folderNameEvent}/${image.name}`;
+        const pathImage = `${MAIN_URL}/events/${folderNameEvent}/${image.name}`;
         images.push(pathImage);
       });
       eventData.images = images;
