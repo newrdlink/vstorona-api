@@ -10,6 +10,8 @@ const NotAuthError = require('../errors/not-auth-err');
 const { notFoundErrors, generalErrors, notAuthErrors } = require('../constants/errorMessages');
 const Worker = require('../models/worker');
 
+const MAIN_URL = 'https://api.vstorona.ru';
+
 const getWorkers = (req, res, next) => {
   Worker.find({})
     .then((workers) => res.send(workers))
@@ -54,7 +56,7 @@ const createWorker = async (req, res, next) => {
           lastName,
           middleName,
           position,
-          image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+          image: `${MAIN_URL}/${dirFileName}/${sampleFile.name}`,
           // image: `${dirPath}\\${sampleFile.name}`,
           owner: req.user.id,
         })
@@ -86,11 +88,9 @@ const patchWorker = async (req, res, next) => {
     middleName,
     position,
     _id,
-    // image,
   } = workerInfo;
 
   if (!req.files) {
-    // console.log('update only text info worker');
     Worker.findByIdAndUpdate(_id, {
       firstName,
       lastName,
@@ -108,8 +108,7 @@ const patchWorker = async (req, res, next) => {
     const sampleFile = req.files.imageFile;
     const dirFileName = cutExpStr(sampleFile.name);
     const dirPath = path.join(__dirname, '..', 'public', 'workers', dirFileName);
-    // console.log('change photo');
-    // console.log(1, dirFileName);
+
     Worker.findById({ _id })
       .then((worker) => {
         // console.log(11, worker);
@@ -139,7 +138,7 @@ const patchWorker = async (req, res, next) => {
                   lastName,
                   middleName,
                   position,
-                  image: `https://api.vs.didrom.ru/workers/${dirFileName}/${sampleFile.name}`,
+                  image: `${MAIN_URL}/workers/${dirFileName}/${sampleFile.name}`,
                   // image: `${dirPath}\\${sampleFile.name}`,
                 }, {
                   new: true,
@@ -175,19 +174,11 @@ const rmWorker = async (req, res, next) => {
       // console.log(1, dirPath);
       // console.log(worker);
       if (fs.existsSync(dirPath)) {
-        // console.log('folder founded');
-        // // for remove dir from localhost DB and location file
-        // const pathFileName = path.normalize(cutExpStr(worker.image));
-        // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
-        // for remove dir from serverDB location file
-        // const dirPath = path.join('/home/newrdlink/projects/
-        // vs/backend/public/', preparePathForRmDir(worker.image));
         fs.rmdirSync(dirPath, { recursive: true });
-        // console.log(2, dirPath);
       }
       // search worker for remove of DB
       Worker.findByIdAndRemove({ _id })
-        .then(() => console.log('воркер удален из базы'))
+        .then(() => console.log('worker was deleted from DB'))
         .catch(next);
       res.send(worker);
     })

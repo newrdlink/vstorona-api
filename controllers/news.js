@@ -5,6 +5,8 @@ const News = require('../models/news');
 const NotAuthError = require('../errors/not-auth-err');
 const { notAuthErrors } = require('../constants/errorMessages');
 
+const MAIN_URL = 'https://api.vstorona.ru';
+
 const getNewsAll = (req, res, next) => {
   News.find({})
     // .populate('creator')
@@ -14,21 +16,19 @@ const getNewsAll = (req, res, next) => {
 
 const getNews = (req, res, next) => {
   const { id: _id } = req.params;
-  // console.log(_id);
+
   News.findOne({ _id })
     .then((event) => res.send(event))
     .catch(next);
 };
 
 const createNews = (req, res, next) => {
-  // console.log('1');
   if (!req.user) {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
 
   const newsData = JSON.parse(req.body.newsData);
   const imagesFront = req.files.imageFilesNews;
-  // console.log(newsData);
 
   const {
     title,
@@ -50,7 +50,7 @@ const createNews = (req, res, next) => {
       image.mv(uploadPath, (error) => {
         if (error) { throw next(error); }
       });
-      const pathImage = `https://api.vs.didrom.ru/news/${folderNameNews}/${image.name}`;
+      const pathImage = `${MAIN_URL}/news/${folderNameNews}/${image.name}`;
       images.push(pathImage);
     });
 
@@ -75,22 +75,17 @@ const updateNews = (req, res, next) => {
   const newsData = JSON.parse(req.body.newsData);
 
   if (!req.files) {
-    // const { _id } = collectiveData;
     News.findByIdAndUpdate(newsData._id, newsData)
       .then((collective) => res.send(collective))
       .catch(next);
-    // console.log(collectiveData);
   } else {
     const imagesFront = req.files.imageFilesNews;
-
     const folderNameNews = newsData.createdAt.slice(0, 16).replace(':', '');
     const dirPath = path.join(__dirname, '..', 'public/news', folderNameNews);
 
     if (fs.existsSync(dirPath)) {
-      // remove dir
-      // console.log('folder founded');
       fs.rmdirSync((dirPath), { recursive: true });
-      console.log('папка новости удалена при обновлении');
+      console.log('folder was deleted by update news');
     }
     const images = [];
 
@@ -104,7 +99,7 @@ const updateNews = (req, res, next) => {
         image.mv(uploadPath, (error) => {
           if (error) { throw next(error); }
         });
-        const pathImage = `https://api.vs.didrom.ru/news/${folderNameNews}/${image.name}`;
+        const pathImage = `${MAIN_URL}/news/${folderNameNews}/${image.name}`;
         images.push(pathImage);
       });
       // collectiveData.creator = req.user.id;
@@ -134,25 +129,15 @@ const deleteNews = (req, res, next) => {
 
       if (fs.existsSync(dirPath)) {
         console.log(1, 'folder founded');
-        // // for remove dir from localhost DB and location file
-        // const pathFileName = path.normalize(cutExpStr(worker.image));
-        // fs.rmdirSync(preparePathForRmDir(pathFileName), { recursive: true });
-        // for remove dir from serverDB location file
-        // const dirPath = path.join('/home/newrdlink/projects/
-        // vs/backend/public/', preparePathForRmDir(worker.image));
         fs.rmdirSync(dirPath, { recursive: true });
-        // console.log(2, dirPath);
+
         News.findByIdAndRemove(_id)
-          .then(() => console.log('новость удалена из базы'))
+          .then(() => console.log('news deleted from BD'))
           .catch(next);
         res.send(news);
       }
-      console.log(2, news);
-      console.log(3, dirPath);
     })
-    .catch((error) => console.log(error));
-
-  // console.log(_id);
+    .catch(next);
 };
 
 module.exports = {
@@ -161,6 +146,4 @@ module.exports = {
   createNews,
   deleteNews,
   updateNews,
-  // verifyUser,
-  // deleteUser,
 };
