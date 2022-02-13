@@ -4,6 +4,8 @@ const Album = require('../models/album');
 const NotAuthError = require('../errors/not-auth-err');
 const { notAuthErrors } = require('../constants/errorMessages');
 
+const MAIN_URL = 'https://api.vstorona.ru';
+
 const getAlbums = (req, res, next) => {
   // console.log('get albums');
   Album.find()
@@ -17,10 +19,10 @@ const getAlbum = (req, res, next) => {
 
 const deleteAlbum = (req, res, next) => {
   const { id: _id } = req.params;
-  console.log('delete album');
   if (!req.user) {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
+  console.log('delete album');
 
   return Album.findByIdAndDelete({ _id })
     .then((album) => {
@@ -42,7 +44,6 @@ const createAlbum = (req, res, next) => {
     return next(new NotAuthError(notAuthErrors.noAuth));
   }
   const albumData = JSON.parse(req.body.albumData);
-
   const imagesFront = req.files.imageFilesAlbum;
 
   const images = [];
@@ -58,7 +59,7 @@ const createAlbum = (req, res, next) => {
       image.mv(uploadPath, (error) => {
         if (error) { throw next(error); }
       });
-      const pathImage = `https://api.vs.didrom.ru/album/${folderNameAlbum}/${image.name}`;
+      const pathImage = `${MAIN_URL}/album/${folderNameAlbum}/${image.name}`;
       images.push(pathImage);
     });
 
